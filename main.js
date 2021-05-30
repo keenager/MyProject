@@ -10,8 +10,8 @@ var app = http.createServer(function(request, response){
 
         response.writeHead(200);
         response.end('Success!');
-    } else if(){
-        
+    } else if(pathname === '/Calendar'){
+
     } else{
         response.writeHead(404);
         response.end();
