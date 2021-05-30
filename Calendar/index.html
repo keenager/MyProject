@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calendar for MIYOUNG</title>
+    <meta charset="utf8">
+    <link rel="stylesheet" href="MyCalendar.css">
+</head>
+<body>
+    <table>
+        <colgroup>
+            <col span="5" style="width: 18%;">
+            <col span="2" style="width: 5%;">
+        </colgroup>
+        <thead>
+            <tr>
+                <td colspan="7">
+                    <button onclick="presentMonth()">이번 달</button>
+                    <button onclick="prevMonth()"><</button>
+                    <span id="yearMonth"></span>
+                    <button onclick="nextMonth()">></button>
+                    <button onclick="window.open('https://safind.scourt.go.kr/sf/mysafind.jsp')">사건 검색</button>
+                </td>
+            </tr>
+            <tr>
+                <td>월요일</td>
+                <td>화요일</td>
+                <td>수요일</td>
+                <td>목요일</td>
+                <td>금요일</td>
+                <td>토요일</td>
+                <td>일요일</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="w1"></tr>
+            <tr id="w2"></tr>
+            <tr id="w3"></tr>
+            <tr id="w4"></tr>
+            <tr id="w5"></tr>
+            <tr id="w6"></tr>
+        </tbody>
+    </table>
+    <script src="MyCalendar.js"></script>
+</body>
+</html>
