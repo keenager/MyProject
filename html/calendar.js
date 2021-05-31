@@ -80,6 +80,7 @@ function displayCalendar(){
                 }
 
                 dateId = '' + thisYear + modifyMonth(thisMonth) + modifyDate(thisDate);
+
                 let scd = storage.getItem(dateId);
 
                 // 스토리지에는 함께 저장돼있어도 출력할 때는 별개 항목으로 출력 필요.
@@ -94,7 +95,7 @@ function displayCalendar(){
                         } 
                         contentsPart.insertAdjacentHTML('beforeend', `<div class="contents">${e}</div>`);
                     }
-                }                
+                }               
                 if(thisDate === lastDate[thisMonth]){
                     thisLastDay = j;
                     break loop1;
