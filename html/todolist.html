@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>To do list</title>
+    <style>
+        input{
+            margin-bottom: 5px;
+        }
+        .items{
+            display: grid;
+            grid-template-columns: 200px 10px;
+            margin: 5px;
+            font-size: large;
+            cursor: default;
+        }
+        .contents{
+            white-space: normal;
+        }
+        .checked{
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    <h1>오늘의 할 일</h1>
+    <input type="text" autofocus>
+    <button>+</button>
+    <div id="list">    </div>
+
+    <!-- <p>나갔다 와도 체크 여부 유지되게 하기. 체크 여부가 캘린더에도 반영되게 하기.</p> -->
+
+    <script src="calendar.js"></script>
+    <script src="todolist.js"></script>
+</body>
+</html>
