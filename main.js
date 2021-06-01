@@ -1,4 +1,3 @@
-const { timeStamp } = require('console');
 const http = require('http');
 const url = require('url');
 const calmod = require('./lib/calmod');
@@ -19,12 +18,14 @@ let app = http.createServer(function(request, response){
         calmod.html(request, response, pathname);
     } else if(pathname === '/inputWindow.html'){
         calmod.html(request, response, pathname);
-    } else if(pathname === '/todolist.html'){
+    } else if(pathname === '/todaylist.html'){
         calmod.html(request, response, pathname);
-    } else if(pathname === '/todolist.js'){
+    } else if(pathname === '/todaylist.js'){
         calmod.html(request, response, pathname);
-    } else if(pathname === '/db_process'){
-        calmod.db_process(request, response);
+    } else if(pathname === '/db_read'){
+        calmod.db_read(request, response);
+    } else if(pathname === '/db_write'){
+        calmod.db_write(request, response);
     } else if(pathname === '/test_process'){
         calmod.test_process(request, response);
     } else if(pathname === '/diet'){

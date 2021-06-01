@@ -25,21 +25,46 @@
 <body>
     <fieldset>
         <legend><span id="date"></span>의 일정을 입력하세요.</legend>
-        <textarea name="" id="contentsPart" cols="30" rows="5" autofocus></textarea>
+
+        <!-- <textarea name="" id="contentsPart" cols="30" rows="5" autofocus></textarea>
         <button onclick="setSchedule()">저장&닫기</button>
-        <button onclick="deleteSchedule()">삭제&닫기</button>
+        <button onclick="deleteSchedule()">삭제&닫기</button> -->
+        <form action="/db_write" method="post">
+            <input type="hidden" name="dateId" id="dateId"/>
+            <textarea name="schedule" id="contentsPart" cols="30" rows="5" autofocus></textarea>
+            <input type='submit' value="저장"/>
+            <button onclick="deleteSchedule()">삭제&닫기</button>
+        </form>
+        
     </fieldset>
 
     <script>
         document.getElementById('date').textContent = `${opener.thisYear}년 ${opener.thisMonth+1}월 ${opener.thisDate}일`;
-        var contentsId = '' + opener.thisYear + opener.modifyMonth(opener.thisMonth) + opener.modifyDate(opener.thisDate);
+        var dateId = '' + opener.thisYear + opener.modifyMonth(opener.thisMonth) + opener.modifyDate(opener.thisDate);
+        document.getElementById('dateId').setAttribute('value', dateId);
         var contentsPart = document.getElementById('contentsPart');
-        contentsPart.value = opener.storage.getItem(contentsId);
+
+        // 기존 저장된 데이터 읽어오기
+        contentsPart.value = opener.storage.getItem(dateId);
+
+        fetch('/db_read?dateId=' + dateId)
+            .then(response => {
+                if(response.status === 200){
+                    return response.text()
+                } 
+                else console.log(response.statusText);
+            })
+            .then(data => {
+                contentsPart.value += data;
+            })
+            .catch(err => {
+                console.log(err);
+            })
 
         function setSchedule(){
             let contents = contentsPart.value;
             if(contents.length != 0){     // contents 내용 없을 때 저장 안되게 하기...  4/30에 아무 내용 없이 저장 눌렀을 때, 4/3 0시 생성 문제...
-                opener.storage.setItem(contentsId, contents);
+                opener.storage.setItem(dateId, contents);
                 opener.deleteCalendar();
                 opener.displayCalendar();   // 달력 갱신할 때 날짜와 그 날짜의 요일이 필요하다.
                 window.close();
@@ -49,7 +74,7 @@
            
         }     
         function deleteSchedule(){
-            opener.storage.removeItem(contentsId);
+            opener.storage.removeItem(dateId);
             opener.deleteCalendar();
             opener.displayCalendar();   // 달력 갱신할 때 날짜와 그 날짜의 요일이 필요하다.
             window.close();

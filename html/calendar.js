@@ -66,8 +66,10 @@ function displayCalendar(){
             }else{
                 //cnt++;
                 //dateId = '' + thisYear + (thisMonth+1) + thisDate;
+                dateId = '' + thisYear + modifyMonth(thisMonth) + modifyDate(thisDate);
+
                 week.insertAdjacentHTML('beforeend', `
-                    <td onclick="openInputWindow(this)">
+                    <td onclick="location.href='/todaylist.html?dateId=${dateId}'">
                         <div class="day${j}">${thisDate}</div>
                         <div class="contentsWrap" id="${thisDate}"></div>
                     </td>
@@ -78,8 +80,6 @@ function displayCalendar(){
                 if(thisYear === present.getFullYear() && thisMonth === present.getMonth() && thisDate === present.getDate()){
                     contentsPart.parentNode.setAttribute('style', 'border: 2px solid blue;');
                 }
-
-                dateId = '' + thisYear + modifyMonth(thisMonth) + modifyDate(thisDate);
 
                 let scd = storage.getItem(dateId);
 
@@ -97,7 +97,7 @@ function displayCalendar(){
                     }
                 }          
                 
-                fetch('/test_process')
+                fetch('/db_read?dateId=' + dateId)
                     .then(response => {
                         if(response.status === 200){
                             return response.text()

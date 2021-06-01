@@ -1,6 +1,6 @@
 let inputContent='';
 const listElem = document.getElementById('list');
-const todayId = '' + present.getFullYear() + modifyMonth(present.getMonth()) + modifyDate(present.getDate());
+// const todayId = '' + present.getFullYear() + modifyMonth(present.getMonth()) + modifyDate(present.getDate());
 
 
 document.querySelector('input').addEventListener('keyup', (event)=>{
@@ -17,6 +17,9 @@ document.querySelector('button').addEventListener('click', ()=>{
     List.display();
 });
 
+
+
+
 let List = {
     clear : function(){
         while(listElem.hasChildNodes()){
@@ -24,14 +27,28 @@ let List = {
         }
     },
     display : function(){
-        let scd = storage.getItem(todayId);
+        const url = new URL(window.location.href);
+        const queryData = url.searchParams;
+        const dateId = queryData.get('dateId');
 
-        if(scd != null){
-            let splitedScd = scd.split('\n');
-            for(e of splitedScd){
-                List.item.create(e);
-            }
-        }  
+        fetch('/db_read?dateId=' + dateId)
+            .then(response => {
+                if(response.status === 200){
+                    return response.text()
+                } 
+                else console.log(response.statusText);
+            })
+            .then(data => {
+                if(data){
+                    let splitedScd = data.split('\n');
+                    for(e of splitedScd){
+                        List.item.create(e);
+                    }
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })  
     },
     item : {
         create : function(item){
