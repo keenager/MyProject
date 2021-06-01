@@ -1,4 +1,4 @@
-var present = new Date();
+const present = new Date();
 var thisYear = present.getFullYear();
 var thisMonth = present.getMonth();  // 달 0~11
 var thisDate = present.getDate();  // 날짜 1~31
@@ -95,7 +95,23 @@ function displayCalendar(){
                         } 
                         contentsPart.insertAdjacentHTML('beforeend', `<div class="contents">${e}</div>`);
                     }
-                }               
+                }          
+                
+                fetch('/test_process')
+                    .then(response => {
+                        if(response.status === 200){
+                            return response.text()
+                        } 
+                        else console.log(response.statusText);
+                    })
+                    .then(data => {
+                        contentsPart.insertAdjacentHTML('beforeend', `<div class="contents">${data}</div>`);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+                
+                
                 if(thisDate === lastDate[thisMonth]){
                     thisLastDay = j;
                     break loop1;

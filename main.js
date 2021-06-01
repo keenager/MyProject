@@ -1,6 +1,8 @@
+const { timeStamp } = require('console');
 const http = require('http');
 const url = require('url');
 const calmod = require('./lib/calmod');
+const temp = require('./lib/temp');
 
 let app = http.createServer(function(request, response){
     let _url = request.url; // 포트번호 뒷부분('/'부터)
@@ -23,6 +25,10 @@ let app = http.createServer(function(request, response){
         calmod.html(request, response, pathname);
     } else if(pathname === '/db_process'){
         calmod.db_process(request, response);
+    } else if(pathname === '/test_process'){
+        calmod.test_process(request, response);
+    } else if(pathname === '/diet'){
+        temp.html(request, response);
     } else{
         response.writeHead(404);
         response.end();
