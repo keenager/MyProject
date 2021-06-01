@@ -18,7 +18,7 @@ document.querySelector('button').addEventListener('click', ()=>{
 });
 
 
-
+let temp = 'inputWindow.html의 script 부분에서 자동완성 기능 가져오기';
 
 let List = {
     clear : function(){
