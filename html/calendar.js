@@ -1,3 +1,6 @@
+/* 정리정돈.. 변수를 최대한 함수 안으로 넣고, export하기
+  그뒤 calendar.html의 script 부분에서 import하고 displayTitle() displayCalendar() */
+
 const present = new Date();
 var thisYear = present.getFullYear();
 var thisMonth = present.getMonth();  // 달 0~11
@@ -11,7 +14,7 @@ var inputWindow;
 var changeWindow;
 var dateId = '';
 var contentsId = '';
-var storage = window.localStorage;
+var storage = window.localStorage;  // 삭제예정
 
 displayTitle();
 displayCalendar();
@@ -75,8 +78,9 @@ function displayCalendar(){
                     </td>
                 `);
 
-                // 오늘이면 강조 표시
                 let contentsPart = document.getElementById(thisDate);
+
+                // 오늘이면 강조 표시                
                 if(thisYear === present.getFullYear() && thisMonth === present.getMonth() && thisDate === present.getDate()){
                     contentsPart.parentNode.setAttribute('style', 'border: 2px solid blue;');
                 }
@@ -84,7 +88,6 @@ function displayCalendar(){
                 let scd = storage.getItem(dateId);
 
                 // 스토리지에는 함께 저장돼있어도 출력할 때는 별개 항목으로 출력 필요.
-
                 if(scd != null){
                     let splitedScd = scd.split('\n');
                     for(let e of splitedScd){
@@ -105,7 +108,10 @@ function displayCalendar(){
                         else console.log(response.statusText);
                     })
                     .then(data => {
-                        contentsPart.insertAdjacentHTML('beforeend', `<div class="contents">${data}</div>`);
+                        let splitedScd = data.split('\n');
+                        for(e of splitedScd){
+                            contentsPart.insertAdjacentHTML('beforeend', `<div class="contents">${e}</div>`);
+                        }
                     })
                     .catch(err => {
                         console.log(err);
@@ -165,6 +171,7 @@ function nextMonth(){
     displayCalendar();
 }
 
+//삭제 예정
 function openInputWindow(self){
     //var schedule = prompt('일정을 입력하세요');
     //console.log('현재 객체는 ' + self);
