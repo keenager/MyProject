@@ -18,14 +18,18 @@ let app = http.createServer(function(request, response){
         calmod.html(request, response, pathname);
     } else if(pathname === '/inputWindow.html'){
         calmod.html(request, response, pathname);
-    } else if(pathname === '/todaylist.html'){
+    } else if(pathname === '/schedule.html'){
         calmod.html(request, response, pathname);
-    } else if(pathname === '/todaylist.js'){
+    } else if(pathname === '/schedule.js'){
         calmod.html(request, response, pathname);
     } else if(pathname === '/db_read'){
         calmod.db_read(request, response);
     } else if(pathname === '/db_write'){
         calmod.db_write(request, response);
+    } else if(pathname === '/db_update_checked'){
+        calmod.db_update_checked(request, response);
+    } else if(pathname === '/db_delete'){
+        calmod.db_delete(request, response);
     } else if(pathname === '/test_process'){
         calmod.test_process(request, response);
     } else if(pathname === '/diet'){

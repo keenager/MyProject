@@ -24,13 +24,16 @@
 </head>
 <body>
     <h1>오늘의 할 일</h1>
-    <input type="text" autofocus>
-    <button>+</button>
-    <div id="list">    </div>
+    <form action="/db_write" method="post">
+        <input type="hidden" name="dateId" id="dateId">
+        <input type="text" name="schedule" id="schedule" autofocus>
+        <input type="submit" id="save" value="저장">
+    </form>
+    
+    <div id="list"></div>
 
     <!-- <p>나갔다 와도 체크 여부 유지되게 하기. 체크 여부가 캘린더에도 반영되게 하기.</p> -->
 
-    <!-- <script src="calendar.js"></script> -->
-    <script src="todaylist.js"></script>
+    <script src="schedule.js"></script>
 </body>
 </html>

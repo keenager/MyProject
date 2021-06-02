@@ -72,7 +72,7 @@ function displayCalendar(){
                 dateId = '' + thisYear + modifyMonth(thisMonth) + modifyDate(thisDate);
 
                 week.insertAdjacentHTML('beforeend', `
-                    <td onclick="location.href='/todaylist.html?dateId=${dateId}'">
+                    <td onclick="location.href='/schedule.html?dateId=${dateId}'">
                         <div class="day${j}">${thisDate}</div>
                         <div class="contentsWrap" id="${thisDate}"></div>
                     </td>
@@ -102,15 +102,12 @@ function displayCalendar(){
                 
                 fetch('/db_read?dateId=' + dateId)
                     .then(response => {
-                        if(response.status === 200){
-                            return response.text()
-                        } 
+                        if(response.status === 200) return response.json()
                         else console.log(response.statusText);
                     })
                     .then(data => {
-                        let splitedScd = data.split('\n');
-                        for(e of splitedScd){
-                            contentsPart.insertAdjacentHTML('beforeend', `<div class="contents">${e}</div>`);
+                        for(e of data){
+                            contentsPart.insertAdjacentHTML('beforeend', `<div class="contents">${e.schedule}</div>`);
                         }
                     })
                     .catch(err => {
