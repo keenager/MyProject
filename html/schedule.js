@@ -1,10 +1,17 @@
 const url = new URL(window.location.href);
 const queryData = url.searchParams;
 const dateId = queryData.get('dateId');
-let inputContent='';
 const listElem = document.getElementById('list');
-// const todayId = '' + present.getFullYear() + modifyMonth(present.getMonth()) + modifyDate(present.getDate());
+const Auto = {
+    ㅈㅇ : '중앙지법',
+    ㄴㅂ : '남부지법',
+    ㅅㅇㄱ : '수원고등',
+    ㅅㅇㅈ : '수원지법',
+    ㅈㅍ : '재판',
+    ㅍㄱ : '판결',
+}
 
+document.getElementById('titleDate').textContent = dateId;
 
 document.getElementById('schedule').addEventListener('keyup', (event)=>{
     if(event.keyCode === 13){
@@ -13,15 +20,13 @@ document.getElementById('schedule').addEventListener('keyup', (event)=>{
     }
 });
 
-document.getElementById('save').addEventListener('click', ()=>{
-    inputToStroage();
-    document.getElementById('schedule').value = '';
-    List.clear();
-    List.display();
+document.getElementById('schedule').addEventListener('input', function(event){
+    for(key in Auto){
+        if(event.target.value.includes(key + ' ')){
+        event.target.value = event.target.value.replace(key + ' ', Auto[key] + ' ');
+        }
+    }
 });
-
-let temp1 = 'update 부분 db.query에서 queryData.checked가 들어가는 과정에서 문자로 들어가서 type 오류 발생';
-let temp2 = 'inputWindow.html의 script 부분에서 자동완성 기능 가져오기';
 
 let List = {
     clear : function(){
@@ -40,7 +45,7 @@ let List = {
             .then(data => {
                 if(data){
                     for(e of data){
-                        List.item.create(e.id, e.date, e.schedule, e.checked);
+                        List.createItem(e.id, e.date, e.schedule, e.checked);
                     }
                 }
             })
@@ -48,36 +53,37 @@ let List = {
                 console.log(err);
             })  
     },
-    item : {
-        create : function(id, date, schedule, checked){
-            // 새로운 div 생성
-            let newItem = createDivIn(listElem);
-            newItem.classList.add('items');
+    createItem : function(id, date, schedule, checked){
+        // 새로운 div 생성
+        let newItem = createDivIn(listElem);
+        newItem.classList.add('items');
 
-            // 내용 부분 생성
-            let contentDiv = createDivIn(newItem);
-            contentDiv.textContent = schedule;
-            contentDiv.classList.add('contents');
-            if(checked === 1){
-                contentDiv.classList.add('checked');
-            }else{
-                contentDiv.classList.remove('checked');
-            }
-            setCheckFunc(contentDiv, id, checked);
-
-            // X 부분 생성
-            let delDiv = createDivIn(newItem);
-            delDiv.textContent = 'X';
-            delDiv.classList.add('del');
-            delDiv.addEventListener('click', (e)=>{
-                let targetSchedule = e.currentTarget.previousSibling.textContent;
-                fetch(`/db_delete?dateId=${dateId}&schedule=${targetSchedule}`)
-                .then(response => {
-                    if(response.status === 200) location.href=`/schedule.html?dateId=${dateId}`;
-                    else console.log(response.statusText);
-                });
-            });
+        // 내용 부분 생성
+        let contentDiv = createDivIn(newItem);
+        if(schedule.includes('판결')){
+            schedule = 'X ' + schedule + '&nbsp;&nbsp;';
+        } else{
+            schedule = '&nbsp;&nbsp;&nbsp;&nbsp;' + schedule + '&nbsp;&nbsp;';
+        } 
+        contentDiv.innerHTML = schedule;
+        contentDiv.classList.add('contents');
+        if(checked){
+            contentDiv.classList.add('checked');
         }
+        setCheckFunc(contentDiv, id, checked);
+
+        // X 부분 생성
+        let delDiv = createDivIn(newItem);
+        delDiv.innerHTML = '<button>X</button>';
+        delDiv.classList.add('del');
+        delDiv.addEventListener('click', (event)=>{
+            let targetSchedule = event.currentTarget.previousSibling.textContent;
+            fetch(`/db_delete?dateId=${dateId}&schedule=${targetSchedule}`)
+            .then(response => {
+                if(response.status === 200) location.href=`/schedule.html?dateId=${dateId}`;
+                else console.log(response.statusText);
+            });
+        });
     }
 }
 
@@ -90,20 +96,14 @@ function createDivIn(elem){
 
 function setCheckFunc(elem, id, checked){
     elem.addEventListener('click', (event)=>{
-        
-        if(checked === 1){
-            //0으로 바꾸고 class 삭제
-            fetch(`/db_update_checked?id=${id}&checked=${checked}`);
-        }else{
-            //1로 바꾸고 class 추가
-
-        } 
-        
-
-        // if(event.target.classList.contains('checked')){
-        //     event.target.classList.remove('checked');
-        // }else{
-        //     event.target.classList.add('checked');
-        // }
+        fetch(`/db_update_checked?id=${id}&checked=${checked}`)
+            .then(response => {
+                if(response.status === 200){
+                    List.clear();
+                    List.display();
+                }else{
+                    console.log(response.statusText);
+                }
+            });
     })
 }

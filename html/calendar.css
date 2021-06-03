@@ -42,6 +42,10 @@ td {
   margin-bottom: 1px;
 }
 
+.checked{
+  text-decoration: line-through;
+}
+
 fieldset{
   font-size: 2rem;
   width: fit-content;

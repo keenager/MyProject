@@ -2,19 +2,14 @@
   그뒤 calendar.html의 script 부분에서 import하고 displayTitle() displayCalendar() */
 
 const present = new Date();
-var thisYear = present.getFullYear();
-var thisMonth = present.getMonth();  // 달 0~11
-var thisDate = present.getDate();  // 날짜 1~31
-var thisDay = present.getDay();  // 요일 0~6   일요일 = 0, 월요일 = 1
-var thisTime = 0;
-var firstDay = 0;
-var lastDate = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-var thisLastDay = 0;
-var inputWindow;
-var changeWindow;
-var dateId = '';
-var contentsId = '';
-var storage = window.localStorage;  // 삭제예정
+let thisYear = present.getFullYear();
+let thisMonth = present.getMonth();  // 달 0~11
+let thisDate = present.getDate();  // 날짜 1~31
+let thisDay = present.getDay();  // 요일 0~6   일요일 = 0, 월요일 = 1
+let firstDay = 0;
+const lastDate = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+let thisLastDay = 0;
+let dateId = '';
 
 displayTitle();
 displayCalendar();
@@ -54,6 +49,10 @@ function deleteCalendar(){
     }
 }
 
+function createDivIn(elem){
+    return elem.appendChild(document.createElement('div'));
+}
+
 function displayCalendar(){
     firstDay = getFirstDay(thisDate, thisDay);
     if(thisYear % 4 === 0) lastDate[1] = 29;
@@ -67,8 +66,6 @@ function displayCalendar(){
             if(i===1 && j<firstDay){
                 week.insertAdjacentHTML('beforeend', '<td></td>');
             }else{
-                //cnt++;
-                //dateId = '' + thisYear + (thisMonth+1) + thisDate;
                 dateId = '' + thisYear + modifyMonth(thisMonth) + modifyDate(thisDate);
 
                 week.insertAdjacentHTML('beforeend', `
@@ -85,21 +82,6 @@ function displayCalendar(){
                     contentsPart.parentNode.setAttribute('style', 'border: 2px solid blue;');
                 }
 
-                let scd = storage.getItem(dateId);
-
-                // 스토리지에는 함께 저장돼있어도 출력할 때는 별개 항목으로 출력 필요.
-                if(scd != null){
-                    let splitedScd = scd.split('\n');
-                    for(let e of splitedScd){
-                        if(e.includes('판결')){
-                            e = 'X ' + e + '&nbsp;&nbsp;';
-                        } else{
-                            e = '&nbsp;&nbsp;&nbsp;&nbsp;' + e + '&nbsp;&nbsp;';
-                        } 
-                        contentsPart.insertAdjacentHTML('beforeend', `<div class="contents">${e}</div>`);
-                    }
-                }          
-                
                 fetch('/db_read?dateId=' + dateId)
                     .then(response => {
                         if(response.status === 200) return response.json()
@@ -107,13 +89,25 @@ function displayCalendar(){
                     })
                     .then(data => {
                         for(e of data){
-                            contentsPart.insertAdjacentHTML('beforeend', `<div class="contents">${e.schedule}</div>`);
+                            let newContent = createDivIn(contentsPart);
+
+                            if(e.schedule.includes('판결')){
+                                e.schedule = 'X ' + e.schedule + '&nbsp;&nbsp;';
+                            } else{
+                                e.schedule = '&nbsp;&nbsp;&nbsp;&nbsp;' + e.schedule + '&nbsp;&nbsp;';
+                            } 
+                            
+                            newContent.innerHTML = e.schedule;
+                            newContent.classList.add('contents');
+                            if(e.checked){
+                                newContent.classList.add('checked');
+                            }
+                            //contentsPart.insertAdjacentHTML('beforeend', `<div class="contents">${e.schedule}</div>`);
                         }
                     })
                     .catch(err => {
                         console.log(err);
                     })
-                
                 
                 if(thisDate === lastDate[thisMonth]){
                     thisLastDay = j;
@@ -166,13 +160,4 @@ function nextMonth(){
     displayTitle();
     deleteCalendar()
     displayCalendar();
-}
-
-//삭제 예정
-function openInputWindow(self){
-    //var schedule = prompt('일정을 입력하세요');
-    //console.log('현재 객체는 ' + self);
-    thisDate = Number(self.childNodes[1].textContent); 
-    thisDay = Number(self.childNodes[1].className.split("")[3]);
-    inputWindow = window.open('inputWindow.html', 'status = no, toolbar = no');    
 }
