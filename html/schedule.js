@@ -1,6 +1,5 @@
 const url = new URL(window.location.href);
-const queryData = url.searchParams;
-const dateId = queryData.get('dateId');
+const dateId = url.searchParams.get('dateId');
 const listElem = document.getElementById('list');
 const Auto = {
     ㅈㅇ : '중앙지법',
@@ -11,16 +10,20 @@ const Auto = {
     ㅍㄱ : '판결',
 }
 
+// document.getElementById('toCalendarButton').addEventListener('click', event => {
+//     location.href='/calendar?dateId=' + dateId;
+// });
+
 document.getElementById('titleDate').textContent = dateId;
 
-document.getElementById('schedule').addEventListener('keyup', (event)=>{
+document.getElementById('scheduleInput').addEventListener('keyup', (event)=>{
     if(event.keyCode === 13){
         event.preventDefault();
         document.getElementById('save').click();
     }
 });
 
-document.getElementById('schedule').addEventListener('input', function(event){
+document.getElementById('scheduleInput').addEventListener('input', function(event){
     for(key in Auto){
         if(event.target.value.includes(key + ' ')){
         event.target.value = event.target.value.replace(key + ' ', Auto[key] + ' ');
@@ -53,19 +56,20 @@ let List = {
                 console.log(err);
             })  
     },
-    createItem : function(id, date, schedule, checked){
+    createItem : function(id, dateId, schedule, checked){
         // 새로운 div 생성
         let newItem = createDivIn(listElem);
         newItem.classList.add('items');
 
         // 내용 부분 생성
         let contentDiv = createDivIn(newItem);
+        let modifiedSchedule;
         if(schedule.includes('판결')){
-            schedule = 'X ' + schedule + '&nbsp;&nbsp;';
+            modifiedSchedule = 'X ' + schedule + '&nbsp;&nbsp;';
         } else{
-            schedule = '&nbsp;&nbsp;&nbsp;&nbsp;' + schedule + '&nbsp;&nbsp;';
+            modifiedSchedule = '&nbsp;&nbsp;&nbsp;&nbsp;' + schedule + '&nbsp;&nbsp;';
         } 
-        contentDiv.innerHTML = schedule;
+        contentDiv.innerHTML = modifiedSchedule;
         contentDiv.classList.add('contents');
         if(checked){
             contentDiv.classList.add('checked');
@@ -77,8 +81,7 @@ let List = {
         delDiv.innerHTML = '<button>X</button>';
         delDiv.classList.add('del');
         delDiv.addEventListener('click', (event)=>{
-            let targetSchedule = event.currentTarget.previousSibling.textContent;
-            fetch(`/db_delete?dateId=${dateId}&schedule=${targetSchedule}`)
+            fetch(`/db_delete?id=${id}`)
             .then(response => {
                 if(response.status === 200) location.href=`/schedule.html?dateId=${dateId}`;
                 else console.log(response.statusText);

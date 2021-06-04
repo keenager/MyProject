@@ -1,6 +1,4 @@
-/* 정리정돈.. 변수를 최대한 함수 안으로 넣고, export하기
-  그뒤 calendar.html의 script 부분에서 import하고 displayTitle() displayCalendar() */
-
+let temp = '스케쥴에서 달력버튼 누르면 현재 월이 아닌 해당 월로 이동하게?';
 const present = new Date();
 let thisYear = present.getFullYear();
 let thisMonth = present.getMonth();  // 달 0~11
@@ -67,48 +65,17 @@ function displayCalendar(){
                 week.insertAdjacentHTML('beforeend', '<td></td>');
             }else{
                 dateId = '' + thisYear + modifyMonth(thisMonth) + modifyDate(thisDate);
+                createTd(week, dateId, j, thisDate);
 
-                week.insertAdjacentHTML('beforeend', `
-                    <td onclick="location.href='/schedule.html?dateId=${dateId}'">
-                        <div class="day${j}">${thisDate}</div>
-                        <div class="contentsWrap" id="${thisDate}"></div>
-                    </td>
-                `);
+                let thisContentsWrap = document.getElementById(thisDate);
+                let thisTd = thisContentsWrap.parentNode;
 
-                let contentsPart = document.getElementById(thisDate);
-
-                // 오늘이면 강조 표시                
-                if(thisYear === present.getFullYear() && thisMonth === present.getMonth() && thisDate === present.getDate()){
-                    contentsPart.parentNode.setAttribute('style', 'border: 2px solid blue;');
+                if(isToday(thisDate)){
+                    thisTd.setAttribute('style', 'border: 2px solid blue;');
                 }
-
-                fetch('/db_read?dateId=' + dateId)
-                    .then(response => {
-                        if(response.status === 200) return response.json()
-                        else console.log(response.statusText);
-                    })
-                    .then(data => {
-                        for(e of data){
-                            let newContent = createDivIn(contentsPart);
-
-                            if(e.schedule.includes('판결')){
-                                e.schedule = 'X ' + e.schedule + '&nbsp;&nbsp;';
-                            } else{
-                                e.schedule = '&nbsp;&nbsp;&nbsp;&nbsp;' + e.schedule + '&nbsp;&nbsp;';
-                            } 
-                            
-                            newContent.innerHTML = e.schedule;
-                            newContent.classList.add('contents');
-                            if(e.checked){
-                                newContent.classList.add('checked');
-                            }
-                            //contentsPart.insertAdjacentHTML('beforeend', `<div class="contents">${e.schedule}</div>`);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
                 
+                displaySchedules(dateId, thisContentsWrap);
+
                 if(thisDate === lastDate[thisMonth]){
                     thisLastDay = j;
                     break loop1;
@@ -118,6 +85,50 @@ function displayCalendar(){
             }
         }
     }
+}
+
+function createTd(week, dateId, day, thisDate){
+    week.insertAdjacentHTML('beforeend', `
+        <td onclick="location.href='/schedule.html?dateId=${dateId}'">
+            <div class="day${day}">${thisDate}</div>
+            <div class="contentsWrap" id="${thisDate}"></div>
+        </td>
+    `);
+}
+
+function isToday(thisDate){
+    return (thisYear === present.getFullYear()
+        && thisMonth === present.getMonth()
+        && thisDate === present.getDate()
+    )
+}
+
+function displaySchedules(dateId, wrap){
+    fetch('/db_read?dateId=' + dateId)
+    .then(response => {
+        if(response.status === 200) return response.json()
+        else console.log(response.statusText);
+    })
+    .then(data => {
+        for(e of data){
+            let newContent = createDivIn(wrap);
+
+            if(e.schedule.includes('판결')){
+                e.schedule = 'X ' + e.schedule + '&nbsp;&nbsp;';
+            } else{
+                e.schedule = '&nbsp;&nbsp;&nbsp;&nbsp;' + e.schedule + '&nbsp;&nbsp;';
+            } 
+            
+            newContent.innerHTML = e.schedule;
+            newContent.classList.add('contents');
+            if(e.checked){
+                newContent.classList.add('checked');
+            }
+        }
+    })
+    .catch(err => {
+        console.log(err);
+    })
 }
 
 function presentMonth(){

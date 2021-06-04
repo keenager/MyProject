@@ -8,7 +8,7 @@
         input{
             margin-bottom: 20px;
         }
-        #schedule{
+        #scheduleInput{
             width: 80%;
         }
         .items{
@@ -25,19 +25,20 @@
             margin-bottom: 1px;
             white-space: normal;
         }
-        /* .del{
-            
-        } */
+        .del{
+            width: 25px;
+            height: 22px;    
+        }
         .checked{
             text-decoration: line-through;
         }
     </style>
 </head>
 <body>
-    <button onclick="location.href='/calendar'">달력</button> <h1>To-do List(<span id="titleDate"></span>)</h1>
+    <button id="toCalendarButton">달력</button> <h1>To-do List(<span id="titleDate"></span>)</h1>
     <form action="/db_write" method="post">
         <input type="hidden" name="dateId" id="dateId">
-        <input type="text" name="schedule" id="schedule" autofocus>
+        <input type="text" name="schedule" id="scheduleInput" autofocus>
         <input type="submit" id="save" value="저장">
     </form>
     
