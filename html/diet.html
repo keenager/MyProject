@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Management</title>
+</head>
+<body>
+    <ul>
+        <li>오늘의 데이터 입력</li>
+            <form action="">
+                <input type="date" name="date" id="dateInput"><br>
+                몸무게 : <input type="text">
+                <input type="submit" value="저장">
+            </form>
+        <li>이번 주 보기</li>
+
+            <div>
+                <canvas id="myChart"></canvas>
+            </div>
+
+        <li>이번 달 보기</li>
+    </ul>
+    <script src="calendar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let dateForm = thisYear + '-' + modifyMonth(thisMonth) + '-' + modifyDate(thisDate);
+        document.getElementById('dateInput').setAttribute('value', dateForm);
+
+        const labels = [
+            'Mon',
+            'Tues',
+            'Wed',
+            'Thur',
+            'Fri',
+            'Sat',
+            'Sun',
+        ];
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'My First dataset',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: [61, 60, 59, 58, 59, 56, 55],
+            }]
+        };
+        const config = {
+            type: 'line',
+            data,
+            options: {}
+        };
+
+        let myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+</body>
+</html>

@@ -10,9 +10,9 @@ const Auto = {
     ㅍㄱ : '판결',
 }
 
-// document.getElementById('toCalendarButton').addEventListener('click', event => {
-//     location.href='/calendar?dateId=' + dateId;
-// });
+document.getElementById('toCalendarButton').addEventListener('click', event => {
+    location.href='/calendar';
+});
 
 document.getElementById('titleDate').textContent = dateId;
 
@@ -32,9 +32,9 @@ document.getElementById('scheduleInput').addEventListener('input', function(even
 });
 
 let List = {
-    clear : function(){
-        while(listElem.hasChildNodes()){
-            listElem.removeChild(listElem.firstChild);
+    clear : function(elem){
+        while(elem.hasChildNodes()){
+            elem.removeChild(elem.firstChild);
         }
     },
     display : function(){
@@ -63,6 +63,7 @@ let List = {
 
         // 내용 부분 생성
         let contentDiv = createDivIn(newItem);
+
         let modifiedSchedule;
         if(schedule.includes('판결')){
             modifiedSchedule = 'X ' + schedule + '&nbsp;&nbsp;';
@@ -70,7 +71,9 @@ let List = {
             modifiedSchedule = '&nbsp;&nbsp;&nbsp;&nbsp;' + schedule + '&nbsp;&nbsp;';
         } 
         contentDiv.innerHTML = modifiedSchedule;
+
         contentDiv.classList.add('contents');
+        
         if(checked){
             contentDiv.classList.add('checked');
         }
@@ -102,7 +105,7 @@ function setCheckFunc(elem, id, checked){
         fetch(`/db_update_checked?id=${id}&checked=${checked}`)
             .then(response => {
                 if(response.status === 200){
-                    List.clear();
+                    List.clear(listElem);
                     List.display();
                 }else{
                     console.log(response.statusText);

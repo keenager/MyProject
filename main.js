@@ -1,6 +1,7 @@
 const http = require('http');
 const url = require('url');
 const calmod = require('./lib/calmod');
+const dietmod = require('./lib/dietmod');
 const temp = require('./lib/temp');
 
 let app = http.createServer(function(request, response){
@@ -33,7 +34,7 @@ let app = http.createServer(function(request, response){
     } else if(pathname === '/test_process'){
         calmod.test_process(request, response);
     } else if(pathname === '/diet'){
-        temp.html(request, response);
+        dietmod.html(request, response, '/diet.html');
     } else{
         response.writeHead(404);
         response.end();
