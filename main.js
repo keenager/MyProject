@@ -23,18 +23,22 @@ let app = http.createServer(function(request, response){
         calmod.html(request, response, pathname);
     } else if(pathname === '/schedule.js'){
         calmod.html(request, response, pathname);
-    } else if(pathname === '/db_read'){
+    } else if(pathname === '/db_read_calendar'){
         calmod.db_read(request, response);
-    } else if(pathname === '/db_write'){
+    } else if(pathname === '/db_write_calendar'){
         calmod.db_write(request, response);
     } else if(pathname === '/db_update_checked'){
         calmod.db_update_checked(request, response);
     } else if(pathname === '/db_delete'){
         calmod.db_delete(request, response);
-    } else if(pathname === '/test_process'){
-        calmod.test_process(request, response);
     } else if(pathname === '/diet'){
         dietmod.html(request, response, '/diet.html');
+    } else if(pathname === '/db_write_diet'){
+        dietmod.db_write(request, response);
+    } else if(pathname === '/db_read_diet'){
+        dietmod.db_read(request, response);
+    } else if(pathname === '/test_process'){
+        calmod.test_process(request, response);
     } else{
         response.writeHead(404);
         response.end();

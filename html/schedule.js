@@ -1,6 +1,6 @@
 const url = new URL(window.location.href);
 const dateId = url.searchParams.get('dateId');
-const listElem = document.getElementById('list');
+const scdListElem = document.getElementById('scheduleList');
 const Auto = {
     ㅈㅇ : '중앙지법',
     ㄴㅂ : '남부지법',
@@ -10,9 +10,9 @@ const Auto = {
     ㅍㄱ : '판결',
 }
 
-document.getElementById('toCalendarButton').addEventListener('click', event => {
-    location.href='/calendar';
-});
+// document.getElementById('toCalendarButton').addEventListener('click', event => {
+//     location.href='/calendar';
+// });
 
 document.getElementById('titleDate').textContent = dateId;
 
@@ -31,34 +31,44 @@ document.getElementById('scheduleInput').addEventListener('input', function(even
     }
 });
 
+let hiddenInput = document.querySelectorAll('input[name=dateId]');
+for (e of hiddenInput) {
+    e.value = dateId;
+}
+
+function inputCheck(self){
+    if(self.children[1].value === ''){
+        alert('스케쥴을 입력하세요.');
+        return false
+    }
+}
+
 let List = {
     clear : function(elem){
         while(elem.hasChildNodes()){
             elem.removeChild(elem.firstChild);
         }
     },
-    display : function(){
-        document.getElementById('dateId').value = dateId;
-
-        fetch('/db_read?dateId=' + dateId)
-            .then(response => {
-                if(response.status === 200) return response.json()
-                else console.log(response.statusText);
-            })
-            .then(data => {
-                if(data){
-                    for(e of data){
-                        List.createItem(e.id, e.date, e.schedule, e.checked);
-                    }
+    displaySchedule : function(){
+        fetch('/db_read_calendar?dateId=' + dateId)
+        .then(response => {
+            if(response.status === 200) return response.json()
+            else console.log(response.statusText);
+        })
+        .then(data => {
+            if(data){
+                for(e of data){
+                    List.createItem(e.id, e.date, e.schedule, e.checked);
                 }
-            })
-            .catch(err => {
-                console.log(err);
-            })  
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
     },
     createItem : function(id, dateId, schedule, checked){
         // 새로운 div 생성
-        let newItem = createDivIn(listElem);
+        let newItem = createDivIn(scdListElem);
         newItem.classList.add('items');
 
         // 내용 부분 생성
@@ -93,8 +103,26 @@ let List = {
     }
 }
 
-List.display();
+function displayWeight() {
+    fetch('/db_read_diet?dateId=' + dateId)
+    .then(response => {
+        if(response.status === 200) return response.json()
+        else console.log(response.statusText);
+    })
+    .then(data => {
+        if(data){
+            for(e of data){
+                document.getElementById('weight').textContent = e.weight + 'kg';
+            }
+        }
+    })
+    .catch(err => {
+        console.log(err);
+    });
+}
 
+List.displaySchedule();
+displayWeight();
 
 function createDivIn(elem){
     return elem.appendChild(document.createElement('div'));
@@ -105,8 +133,8 @@ function setCheckFunc(elem, id, checked){
         fetch(`/db_update_checked?id=${id}&checked=${checked}`)
             .then(response => {
                 if(response.status === 200){
-                    List.clear(listElem);
-                    List.display();
+                    List.clear(scdListElem);
+                    List.displaySchedule();
                 }else{
                     console.log(response.statusText);
                 }

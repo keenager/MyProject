@@ -4,57 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diet Management</title>
+    <link rel="stylesheet" href="calendar.css">
 </head>
 <body>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="/calendar">Calendar</a>
+        <a href="/diet">Diet Management</a>
+    </div>
+    <span style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776; menu</span>
+
     <ul>
-        <li>오늘의 데이터 입력</li>
-            <form action="">
-                <input type="date" name="date" id="dateInput"><br>
-                몸무게 : <input type="text">
-                <input type="submit" value="저장">
-            </form>
         <li>이번 주 보기</li>
 
             <div>
-                <canvas id="myChart"></canvas>
+                <canvas id="weeklyChart"></canvas>
             </div>
 
         <li>이번 달 보기</li>
+            <div>
+                <canvas id="monthlyChart"></canvas>
+            </div>
     </ul>
     <script src="calendar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let dateForm = thisYear + '-' + modifyMonth(thisMonth) + '-' + modifyDate(thisDate);
-        document.getElementById('dateInput').setAttribute('value', dateForm);
+        //document.getElementById('dateInput').setAttribute('value', dateForm);
 
-        const labels = [
-            'Mon',
-            'Tues',
-            'Wed',
-            'Thur',
-            'Fri',
-            'Sat',
-            'Sun',
-        ];
-        const data = {
-            labels: labels,
-            datasets: [{
-                label: 'My First dataset',
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
-                data: [61, 60, 59, 58, 59, 56, 55],
-            }]
-        };
-        const config = {
+        const w_config = {
             type: 'line',
-            data,
-            options: {}
+            data: {
+                labels: ['Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: '몸무게',
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [],
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        min: 50,
+                        max: 70,
+                    }
+                }
+            }
         };
+
+        let date = new Date();
+
+        for(let i = 0; i < 7; i++) {
+            date.setDate(date.getDate() - (date.getDay() - 1) + i);
+            dateId = date.getFullYear() + '-' + modifyMonth(date.getMonth()) + '-' + modifyDate(date.getDate());
+            // dateId 를 이용해서 서버에서 weight 데이터 불러온 뒤,
+            // w_config.data.datasets[0].data[i] 에 입력
+            fetch('/db_read_diet?dateId=' + dateId)
+            .then(response => {
+                if(response.status === 200) return response.json()
+                else console.log(response.statusText);
+            })
+            .then(data => {
+                if(data){
+                    for(e of data){
+                        w_config.data.datasets[0].data[i] = e.weight;
+                    }
+                    myChart.update();
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+        
 
         let myChart = new Chart(
-            document.getElementById('myChart'),
-            config
+            document.getElementById('weeklyChart'),
+            w_config
         );
+    </script>
+    <script>
+        function openNav() {
+          document.getElementById("mySidenav").style.width = "250px";
+        }
+        
+        function closeNav() {
+          document.getElementById("mySidenav").style.width = "0";
+        }
     </script>
 </body>
 </html>

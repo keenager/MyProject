@@ -27,7 +27,7 @@ function displayCalendar(){
             if (i === 1 && j < firstDay) {
                 createTdIn(weekTr);
             } else {
-                dateId = '' + thisYear + modifyMonth(thisMonth) + modifyDate(thisDate);
+                dateId = thisYear + '-' + modifyMonth(thisMonth) + '-' + modifyDate(thisDate);
 
                 let thisTd = createTdIn(weekTr);
                 thisTd.setAttribute('onclick', `location.href='/schedule.html?dateId=${dateId}'`);
@@ -92,7 +92,7 @@ function setTd(td, day, date){
 }
 
 function displaySchedules(dateId, div){
-    fetch('/db_read?dateId=' + dateId)
+    fetch('/db_read_calendar?dateId=' + dateId)
     .then(response => {
         if(response.status === 200) return response.json()
         else console.log(response.statusText);
