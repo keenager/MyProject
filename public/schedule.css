@@ -1,0 +1,27 @@
+input{
+    margin-bottom: 20px;
+}
+#scheduleInput{
+    width: 80%;
+}
+.items{
+    display: grid;
+    grid-template-columns: 90% 10%;
+    margin: 5px;
+    font-size: large;
+    cursor: default;
+}
+.contents{
+    /* width: fit-content; */
+    border-radius: 5px / 5px;
+    background-color: gold;
+    margin-bottom: 1px;
+    white-space: normal;
+}
+.del{
+    width: 25px;
+    height: 22px;    
+}
+.checked{
+    text-decoration: line-through;
+}

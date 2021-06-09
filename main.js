@@ -1,48 +1,58 @@
-const http = require('http');
-const url = require('url');
+//const http = require('http');
+//const url = require('url');
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
 const calmod = require('./lib/calmod');
 const dietmod = require('./lib/dietmod');
-const temp = require('./lib/temp');
+//const temp = require('./lib/temp');
 
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static('public'));
+
+
+app.get('/db_read_calendar/:dateId', (req, res) => {
+    calmod.db_read(req, res);
+});
+
+app.post('/db_write_calendar', (req, res) => {
+    calmod.db_write(req, res);
+});
+
+app.get('/db_update_checked/:id/:checked', (req, res) => {
+    calmod.db_update_checked(req, res);
+});
+
+app.get('/db_delete/:id', (req, res) => {
+    calmod.db_delete(req, res);
+});
+
+app.get('/db_write_diet', (req, res) => {
+    dietmod.db_write(req, res);
+});
+
+app.get('/db_read_diet/:dateId', (req, res) => {
+    dietmod.db_read(req, res);
+});
+
+app.get('/test_process', (req, res) => {
+    caltmod.test_process(req, res);
+});
+
+/*
 let app = http.createServer(function(request, response){
     let _url = request.url; // 포트번호 뒷부분('/'부터)
     let queryData = url.parse(_url, true).query; // '?' 뒷부분
     let pathname = url.parse(_url, true).pathname;  // '/'부터 '?' 앞까지
 
     if(pathname === '/'){
-        calmod.html(request, response, '/index.html')
     } else if(pathname === '/calendar'){
-        calmod.html(request, response, '/calendar.html');
-    } else if(pathname === '/calendar.css'){
-        calmod.html(request, response, pathname);
-    } else if(pathname === '/calendar.js'){
-        calmod.html(request, response, pathname);
-    } else if(pathname === '/inputWindow.html'){
-        calmod.html(request, response, pathname);
-    } else if(pathname === '/schedule.html'){
-        calmod.html(request, response, pathname);
-    } else if(pathname === '/schedule.js'){
-        calmod.html(request, response, pathname);
-    } else if(pathname === '/db_read_calendar'){
-        calmod.db_read(request, response);
-    } else if(pathname === '/db_write_calendar'){
-        calmod.db_write(request, response);
-    } else if(pathname === '/db_update_checked'){
-        calmod.db_update_checked(request, response);
-    } else if(pathname === '/db_delete'){
-        calmod.db_delete(request, response);
-    } else if(pathname === '/diet'){
-        dietmod.html(request, response, '/diet.html');
-    } else if(pathname === '/db_write_diet'){
-        dietmod.db_write(request, response);
-    } else if(pathname === '/db_read_diet'){
-        dietmod.db_read(request, response);
-    } else if(pathname === '/test_process'){
-        calmod.test_process(request, response);
     } else{
         response.writeHead(404);
         response.end();
     }
-});
+}); */
 
-app.listen(3000);
+app.listen(3000, () => {
+    console.log('App is listening on port 3000!')
+});
