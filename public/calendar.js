@@ -30,7 +30,7 @@ function displayCalendar(){
                 dateId = thisYear + '-' + modifyMonth(thisMonth) + '-' + modifyDate(thisDate);
 
                 let thisTd = createTdIn(weekTr);
-                thisTd.setAttribute('onclick', `location.href='schedule.html?dateId=${dateId}'`);
+                thisTd.setAttribute('onclick', `location.href='/calendar/schedule?dateId=${dateId}'`);
                 if (isToday(thisDate)) {
                     thisTd.setAttribute('style', 'border: 2px solid blue;');
                 }
@@ -92,7 +92,7 @@ function setTd(td, day, date){
 }
 
 function displaySchedules(dateId, div){
-    fetch('/db_read_calendar/' + dateId)
+    fetch('/calendar/db_read/' + dateId)
     .then(response => {
         if(response.status === 200) return response.json()
         else console.log(response.statusText);

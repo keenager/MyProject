@@ -2,20 +2,31 @@
 //const url = require('url');
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
 const calmod = require('./lib/calmod');
 const dietmod = require('./lib/dietmod');
 //const temp = require('./lib/temp');
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.urlencoded({extended: false}));
 app.use(express.static('public'));
 
 
-app.get('/db_read_calendar/:dateId', (req, res) => {
+app.get('/calendar', (req, res) => {
+    res.sendFile(__dirname + '/public/calendar.html');
+});
+
+app.get('/calendar/schedule', (req, res) => {
+    res.sendFile(__dirname + '/public/schedule.html');
+});
+
+app.get('/diet', (req, res) => {
+    res.sendFile(__dirname + '/public/diet.html');
+});
+
+app.get('/calendar/db_read/:dateId', (req, res) => {
     calmod.db_read(req, res);
 });
 
-app.post('/db_write_calendar', (req, res) => {
+app.post('/calendar/db_write', (req, res) => {
     calmod.db_write(req, res);
 });
 
@@ -27,17 +38,31 @@ app.get('/db_delete/:id', (req, res) => {
     calmod.db_delete(req, res);
 });
 
-app.get('/db_write_diet', (req, res) => {
+app.post('/diet/db_write', (req, res) => {
     dietmod.db_write(req, res);
 });
 
-app.get('/db_read_diet/:dateId', (req, res) => {
+app.get('/diet/db_read/:dateId', (req, res) => {
     dietmod.db_read(req, res);
 });
 
 app.get('/test_process', (req, res) => {
     caltmod.test_process(req, res);
 });
+
+app.use( (req, res, next) => {
+    res.status(404).send(`Sorry can't find that.`);
+});
+
+app.use( (err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+app.listen(3000, () => {
+    console.log('App is listening on port 3000!')
+});
+
 
 /*
 let app = http.createServer(function(request, response){
@@ -52,7 +77,3 @@ let app = http.createServer(function(request, response){
         response.end();
     }
 }); */
-
-app.listen(3000, () => {
-    console.log('App is listening on port 3000!')
-});

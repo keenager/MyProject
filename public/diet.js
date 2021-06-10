@@ -47,7 +47,7 @@ function displayChart(elemId, config, startDate) {
         dateId = date.getFullYear() + '-' + modifyMonth(date.getMonth()) + '-' + modifyDate(i + startDate);
         // dateId 를 이용해서 서버에서 weight 데이터 불러온 뒤,
         // w_config.data.datasets[0].data[i] 에 입력
-        fetch('/db_read_diet/' + dateId)
+        fetch('/diet/db_read/' + dateId)
         .then(response => {
             if(response.status === 200) return response.json()
             else console.log(response.statusText);
@@ -69,4 +69,15 @@ function displayChart(elemId, config, startDate) {
     document.getElementById(elemId),
     config
     );
+}
+
+function modifyMonth(m){
+    let month = m + 1;
+    let modifiedMonth = month < 10 ? '0'+month : month; 
+    return modifiedMonth;
+}
+
+function modifyDate(d){
+    let modifiedDate = d < 10 ? '0'+d : d; 
+    return modifiedDate;
 }

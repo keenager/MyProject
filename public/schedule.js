@@ -50,7 +50,7 @@ let List = {
         }
     },
     displaySchedule : function(){
-        fetch('/db_read_calendar/' + dateId)
+        fetch('/calendar/db_read/' + dateId)
         .then(response => {
             if(response.status === 200) return response.json()
             else console.log(response.statusText);
@@ -81,7 +81,6 @@ let List = {
             modifiedSchedule = '&nbsp;&nbsp;&nbsp;&nbsp;' + schedule + '&nbsp;&nbsp;';
         } 
         contentDiv.innerHTML = modifiedSchedule;
-
         contentDiv.classList.add('contents');
         
         if(checked){
@@ -96,7 +95,7 @@ let List = {
         delDiv.addEventListener('click', (event)=>{
             fetch(`/db_delete/${id}`)
             .then(response => {
-                if(response.status === 200) location.href=`/schedule.html?dateId=${dateId}`;
+                if(response.status === 200) location.href=`/calendar/schedule?dateId=${dateId}`;
                 else console.log(response.statusText);
             });
         });
@@ -104,7 +103,7 @@ let List = {
 }
 
 function displayWeight() {
-    fetch('/db_read_diet/' + dateId)
+    fetch('/diet/db_read/' + dateId)
     .then(response => {
         if(response.status === 200) return response.json()
         else console.log(response.statusText);
