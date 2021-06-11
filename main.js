@@ -1,54 +1,16 @@
-//const http = require('http');
-//const url = require('url');
 const express = require('express');
 const app = express();
-const calmod = require('./lib/calmod');
-const dietmod = require('./lib/dietmod');
-//const temp = require('./lib/temp');
+const helmet = require('helmet');
+const indexRouter = require('./routes/index');
+const calRouter = require('./routes/calendar');
+const dietRouter = require('./routes/diet');
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.static('public'));
-
-
-app.get('/calendar', (req, res) => {
-    res.sendFile(__dirname + '/public/calendar.html');
-});
-
-app.get('/calendar/schedule', (req, res) => {
-    res.sendFile(__dirname + '/public/schedule.html');
-});
-
-app.get('/diet', (req, res) => {
-    res.sendFile(__dirname + '/public/diet.html');
-});
-
-app.get('/calendar/db_read/:dateId', (req, res) => {
-    calmod.db_read(req, res);
-});
-
-app.post('/calendar/db_write', (req, res) => {
-    calmod.db_write(req, res);
-});
-
-app.get('/db_update_checked/:id/:checked', (req, res) => {
-    calmod.db_update_checked(req, res);
-});
-
-app.get('/db_delete/:id', (req, res) => {
-    calmod.db_delete(req, res);
-});
-
-app.post('/diet/db_write', (req, res) => {
-    dietmod.db_write(req, res);
-});
-
-app.get('/diet/db_read/:dateId', (req, res) => {
-    dietmod.db_read(req, res);
-});
-
-app.get('/test_process', (req, res) => {
-    caltmod.test_process(req, res);
-});
+app.use(helmet());
+app.use('/', indexRouter);
+app.use('/calendar', calRouter);
+app.use('/diet', dietRouter);
 
 app.use( (req, res, next) => {
     res.status(404).send(`Sorry can't find that.`);

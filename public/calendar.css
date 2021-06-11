@@ -10,11 +10,11 @@ thead {
 }
 
 #yearMonth{
-  font-size: 2rem;
+  font-size: 1rem;
 }
 
-button{
-  height: 2.5rem;
+button {
+  padding: 1px;
 }
 
 td {
@@ -51,12 +51,8 @@ fieldset{
   width: fit-content;
 }
 
-input{
-  height: 2rem;
-}
-
 input, textarea, button{
-  font-size: 2rem;
+  font-size: 1rem;
 }
 
 .sidenav {

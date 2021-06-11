@@ -1,5 +1,5 @@
-const url = new URL(window.location.href);
-const dateId = url.searchParams.get('dateId');
+//const url = new URL(window.location.href);
+//const dateId = url.searchParams.get('dateId');
 const scdListElem = document.getElementById('scheduleList');
 const Auto = {
     ㅈㅇ : '중앙지법',
@@ -10,11 +10,9 @@ const Auto = {
     ㅍㄱ : '판결',
 }
 
-// document.getElementById('toCalendarButton').addEventListener('click', event => {
-//     location.href='/calendar';
-// });
+document.getElementById('toCalendarButton').addEventListener('click', event => location.href='/calendar');
 
-document.getElementById('titleDate').textContent = dateId;
+let dateId = document.getElementById('titleDate').textContent;
 
 document.getElementById('scheduleInput').addEventListener('keyup', (event)=>{
     if(event.keyCode === 13){
@@ -31,10 +29,10 @@ document.getElementById('scheduleInput').addEventListener('input', function(even
     }
 });
 
-let hiddenInput = document.querySelectorAll('input[name=dateId]');
-for (e of hiddenInput) {
-    e.value = dateId;
-}
+// let hiddenInput = document.querySelectorAll('input[name=dateId]');
+// for (e of hiddenInput) {
+//     e.value = dateId;
+// }
 
 function inputCheck(self){
     if(self.children[1].value === ''){
@@ -93,9 +91,9 @@ let List = {
         delDiv.innerHTML = '<button>X</button>';
         delDiv.classList.add('del');
         delDiv.addEventListener('click', (event)=>{
-            fetch(`/db_delete/${id}`)
+            fetch(`/calendar/db_delete/${id}`)
             .then(response => {
-                if(response.status === 200) location.href=`/calendar/schedule?dateId=${dateId}`;
+                if(response.status === 200) location.href=`/calendar/schedule/${dateId}`;
                 else console.log(response.statusText);
             });
         });
@@ -129,7 +127,7 @@ function createDivIn(elem){
 
 function setCheckFunc(elem, id, checked){
     elem.addEventListener('click', (event)=>{
-        fetch(`/db_update_checked/${id}/${checked}`)
+        fetch(`/calendar/db_update_checked/${id}/${checked}`)
             .then(response => {
                 if(response.status === 200){
                     List.clear(scdListElem);

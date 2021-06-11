@@ -9,6 +9,17 @@ const lastDate = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 let thisLastDay = 0;
 let dateId = '';
 
+displayTitle();
+displayCalendar();
+
+document.getElementById('prsMonthBtn').addEventListener('click', event => presentMonth());
+document.getElementById('prevMonthBtn').addEventListener('click', event => prevMonth());
+document.getElementById('nextMonthBtn').addEventListener('click', event => nextMonth());
+document.getElementById('srchBtn').addEventListener('click', event => 
+    window.open('https://safind.scourt.go.kr/sf/mysafind.jsp')
+);
+
+
 
 function displayTitle(){
     document.getElementById("yearMonth").innerHTML = thisYear + '년 ' + (thisMonth+1) + '월';
@@ -30,7 +41,8 @@ function displayCalendar(){
                 dateId = thisYear + '-' + modifyMonth(thisMonth) + '-' + modifyDate(thisDate);
 
                 let thisTd = createTdIn(weekTr);
-                thisTd.setAttribute('onclick', `location.href='/calendar/schedule?dateId=${dateId}'`);
+                thisTd.setAttribute('id', dateId);
+                thisTd.addEventListener('click', event => location.href='/calendar/schedule/' + thisTd.id);
                 if (isToday(thisDate)) {
                     thisTd.setAttribute('style', 'border: 2px solid blue;');
                 }
