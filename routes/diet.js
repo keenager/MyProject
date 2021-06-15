@@ -1,10 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const dietmod = require('../lib/dietmod');
-const template = require('../lib/template');
 
 router.get('/', (req, res) => {
-    template.diet(req, res);
+    if(!req.session.is_logined) {
+        res.redirect('/');
+    }
+    res.header({
+        'Content-Type': 'text/html',
+        'Content-Security-Policy': `script-src 'self' https://cdn.jsdelivr.net`,
+    }).render('diet', {
+        is_logined: req.session.is_logined,
+        nickname: req.session.nickname,
+    });
 });
 
 router.post('/db_write', (req, res) => {

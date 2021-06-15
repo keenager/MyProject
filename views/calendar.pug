@@ -1,0 +1,47 @@
+doctype html
+head
+  title Calendar for MIYOUNG
+  meta(charset='utf8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  link(rel='stylesheet' href='calendar.css')
+#mySidenav.sidenav
+  a.closebtn(href='javascript:void(0)') &times;
+  a(href='/') Home 
+  a(href='/calendar') Calendar
+  a(href='/diet') Diet Management
+span #{nickname}
+if is_logined
+    |  | 
+    a(href='/auth/logout') 로그아웃
+else 
+    a(href='/auth/login') 로그인
+table
+  colgroup
+    col(span='5' style='width: 18%;')
+    col(span='2' style='width: 5%;')
+  thead
+    tr
+      td(colspan='7')
+        span.menubtn(style='font-size:1rem; cursor:pointer;') &#9776; menu
+        button#prsMonthBtn 이번 달
+        button#prevMonthBtn <
+        span#yearMonth
+        button#nextMonthBtn >
+        button#srchBtn 사건 검색
+    tr
+      td 월요일
+      td 화요일
+      td 수요일
+      td 목요일
+      td 금요일
+      td 토요일
+      td 일요일
+  tbody
+    tr#w1
+    tr#w2
+    tr#w3
+    tr#w4
+    tr#w5
+    tr#w6
+script(src='calendar.js')
+script(src='sideNavi.js')

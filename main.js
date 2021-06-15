@@ -1,16 +1,31 @@
 const express = require('express');
 const app = express();
+app.use(express.urlencoded({extended: false}));
+app.use(express.static('public'));
+
 const helmet = require('helmet');
+app.use(helmet());
+
+const session = require('express-session');
+const FileStore = require('session-file-store')(session);
+app.use(session({
+    secret: 'akhgalkdhfk',
+    resave: false,
+    saveUninitialized: true,
+    store: new FileStore({}),
+}));
+
+app.set('views', './views');
+app.set('view engine', 'pug');
+
 const indexRouter = require('./routes/index');
 const calRouter = require('./routes/calendar');
 const dietRouter = require('./routes/diet');
-
-app.use(express.urlencoded({extended: false}));
-app.use(express.static('public'));
-app.use(helmet());
+const authRouter = require('./routes/auth');
 app.use('/', indexRouter);
 app.use('/calendar', calRouter);
 app.use('/diet', dietRouter);
+app.use('/auth', authRouter);
 
 app.use( (req, res, next) => {
     res.status(404).send(`Sorry can't find that.`);

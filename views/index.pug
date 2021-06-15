@@ -1,0 +1,16 @@
+doctype html
+head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Homepage
+span #{nickname}
+if is_logined
+    |  | 
+    a(href='/auth/logout') 로그아웃
+else 
+    a(href='/auth/login') 로그인
+ul
+    li
+        a(href="/calendar") Calendar
+    li
+        a(href="/diet") Diet Management

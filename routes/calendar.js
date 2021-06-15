@@ -1,14 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const calmod = require('../lib/calmod');
-const template = require('../lib/template');
 
 router.get('/', (req, res) => {
-    template.calendar(req, res);
+    if(!req.session.is_logined) {
+        res.redirect('/');
+    }
+    res.render('calendar', {
+        is_logined: req.session.is_logined,
+        nickname: req.session.nickname,
+    });
 });
 
 router.get('/schedule/:dateId', (req, res) => {
-    template.schedule(req, res);
+    if(!req.session.is_logined) {
+        res.redirect('/');
+    }
+    res.render('schedule', {
+        dateId: req.params.dateId,
+    });
 });
 
 router.get('/db_read/:dateId', (req, res) => {

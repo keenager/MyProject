@@ -5,6 +5,11 @@ date.setDate(
     - ( date.getDay() == 0 ? 6 : date.getDay() - 1 ) 
 );   // 이번 주 월요일의 날짜를 구해서 첫 날로 지정.
 
+let temp = new Date(date);
+temp.setDate(date.getDate() + 6);
+document.getElementById('thisWeek').textContent = `
+    ${date.getMonth() + 1}월 ${date.getDate()}일 ~ ${temp.getMonth() + 1}월 ${temp.getDate()}일
+`;
 displayChart( 'weeklyChart', w_config, date.getDate() );
 
 

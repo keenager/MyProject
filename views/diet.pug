@@ -1,0 +1,35 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Diet Management
+  link(rel='stylesheet' href='calendar.css')
+#mySidenav.sidenav
+  a.closebtn(href='javascript:void(0)') &times;
+  a(href='/') Home 
+  a(href='/calendar') Calendar
+  a(href='/diet') Diet Management
+span #{nickname}
+if is_logined
+    |  | 
+    a(href='/auth/logout') 로그아웃
+else 
+    a(href='/auth/login') 로그인
+br
+span.menubtn(style='font-size:30px;cursor:pointer;') &#9776; menu
+ul
+  li 
+    | 이번 주(
+    span#thisWeek 
+    | ) 보기
+  div
+    canvas#weeklyChart
+  li
+    | 이번 달(
+    span#thisMonth
+    | ) 보기
+  div
+    canvas#monthlyChart
+script(src='https://cdn.jsdelivr.net/npm/chart.js')
+script(src='diet.js')
+script(src='sideNavi.js')

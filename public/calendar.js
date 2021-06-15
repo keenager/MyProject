@@ -1,13 +1,6 @@
-let temp = '스케쥴에서 달력버튼 누르면 현재 월이 아닌 해당 월로 이동하게?';
-const present = new Date();
-let thisYear = present.getFullYear();
-let thisMonth = present.getMonth();  // 달 0~11
-let thisDate = present.getDate();  // 날짜 1~31
-let thisDay = present.getDay();  // 요일 0~6   일요일 = 0, 월요일 = 1
-let firstDay = 0;
+//'스케쥴에서 달력버튼 누르면 현재 월이 아닌 해당 월로 이동하게?';
+let present = new Date();
 const lastDate = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-let thisLastDay = 0;
-let dateId = '';
 
 displayTitle();
 displayCalendar();
@@ -19,17 +12,18 @@ document.getElementById('srchBtn').addEventListener('click', event =>
     window.open('https://safind.scourt.go.kr/sf/mysafind.jsp')
 );
 
-
-
 function displayTitle(){
-    document.getElementById("yearMonth").innerHTML = thisYear + '년 ' + (thisMonth+1) + '월';
+    document.getElementById("yearMonth").innerHTML = present.getFullYear() + '년 ' + (present.getMonth() + 1) + '월';
 }
 
 function displayCalendar(){
-    firstDay = getFirstDay(thisDate, thisDay);
-    if(thisYear % 4 === 0) lastDate[1] = 29;
-    //var cnt = 0;
-    thisDate = 1;
+    let year = present.getFullYear();
+    let month = present.getMonth();
+    let temp = new Date(year, month);
+    let firstDay = temp.getDay() || 7;
+    
+    if(year % 4 === 0) lastDate[1] = 29;
+    let date = 1
     loop1:
     for (let i = 1; i <= 6; i++) {
         let weekTr = document.getElementById('w'+i);
@@ -38,59 +32,42 @@ function displayCalendar(){
             if (i === 1 && j < firstDay) {
                 createTdIn(weekTr);
             } else {
-                dateId = thisYear + '-' + modifyMonth(thisMonth) + '-' + modifyDate(thisDate);
+                let dateId = year + '-' + modify(month + 1) + '-' + modify(date);
 
                 let thisTd = createTdIn(weekTr);
                 thisTd.setAttribute('id', dateId);
                 thisTd.addEventListener('click', event => location.href='/calendar/schedule/' + thisTd.id);
-                if (isToday(thisDate)) {
+                if (isToday(year, month, date)) {
                     thisTd.setAttribute('style', 'border: 2px solid blue;');
                 }
 
-                setTd(thisTd, j, thisDate);
+                setTd(thisTd, j, date);
 
-                let thisContentsWrap = document.getElementById(thisDate);
+                let thisContentsWrap = document.getElementById(date);
                 displaySchedules(dateId, thisContentsWrap);
 
-                if(thisDate === lastDate[thisMonth]){
-                    thisLastDay = j;
+                if(date === lastDate[month]){
                     break loop1;
                 }
-                thisDate++;
+                date++;
             }
         }
     }
 }
 
-function getFirstDay(thisDate, thisDay){    //해당 월의 1일의 요일
-    if(thisDay === 0) thisDay = 7;
-    var temp = thisDate % 7;
-    if(temp === 1) return thisDay;
-    else if(temp === 0) return (thisDay + 1);
-    else if(temp - 1 < thisDay) return (thisDay - temp + 1);
-    else return (thisDay + 7 - temp + 1);
-}
-
-function modifyMonth(m){
-    let month = m + 1;
-    let modifiedMonth = month < 10 ? '0'+month : month; 
-    return modifiedMonth;
-}
-
-function modifyDate(d){
-    let modifiedDate = d < 10 ? '0'+d : d; 
-    return modifiedDate;
+function modify(num) {
+    return ('0' + num).slice(-2)
 }
 
 function createTdIn(elem){
     return elem.appendChild(document.createElement('td'));
 }
 
-function isToday(thisDate){
-    return (thisYear === present.getFullYear()
-        && thisMonth === present.getMonth()
-        && thisDate === present.getDate()
-    )
+function isToday(year, month, date){
+    let temp = new Date();
+    return year === temp.getFullYear() 
+        && month === temp.getMonth()
+        && date === temp.getDate()
 }
 
 function setTd(td, day, date){
@@ -100,7 +77,7 @@ function setTd(td, day, date){
 
     let scheduleDiv = createDivIn(td);
     scheduleDiv.classList.add('scheduleDiv');
-    scheduleDiv.setAttribute('id', thisDate);
+    scheduleDiv.setAttribute('id', date);
 }
 
 function displaySchedules(dateId, div){
@@ -128,6 +105,7 @@ function displaySchedules(dateId, div){
     })
     .catch(err => {
         console.log(err);
+        return err
     })
 }
 
@@ -145,43 +123,22 @@ function deleteCalendar() {
 }
 
 function presentMonth(){
-    thisYear = present.getFullYear();
-    thisMonth = present.getMonth();
-    thisDate = present.getDate();
-    thisDay = present.getDay();
-
-    displayTitle();
-    deleteCalendar();
-    displayCalendar();
+    present = new Date();
+    refresh();
 }
 
 function prevMonth(){
-    if(thisMonth === 0){
-        thisYear -= 1;
-        thisMonth = 11;
-    }else{
-        thisMonth -= 1; 
-    }
-    thisDate = lastDate[thisMonth];
-    thisDay = firstDay - 1;
-
-    displayTitle();
-    deleteCalendar();
-    displayCalendar();
+    present.setMonth(present.getMonth() - 1);
+    refresh();
 }
 
 function nextMonth(){
-    if(thisMonth === 11){
-        thisYear += 1;
-        thisMonth = 0;
-    }else{
-        thisMonth += 1;
-    }
-    thisDate = 1;
-    if(thisLastDay === 7) thisDay = 1;
-    else thisDay = thisLastDay + 1;
+    present.setMonth(present.getMonth() + 1);
+    refresh();
+}
 
+function refresh() {
     displayTitle();
-    deleteCalendar()
+    deleteCalendar();
     displayCalendar();
 }

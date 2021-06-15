@@ -1,0 +1,27 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  link(rel='stylesheet' href='/schedule.css')
+  title Schedule list
+button#toCalendarButton 달력
+h2
+  | Schedule List (
+  span#titleDate #{dateId}
+  | )
+form(action='/calendar/db_write' method='post' onsubmit='return inputCheck(this)')
+  input(type='hidden' name='dateId' value=`${dateId}`)
+  input#scheduleInput(type='text' name='schedule' autofocus='')
+  input#save(type='submit' value='저장')
+#scheduleList
+br
+br
+h2 몸무게 입력
+form(action='/diet/db_write' method='post' onsubmit='return inputCheck(this)')
+  input(type='hidden' name='dateId' value=`${dateId}`)
+  input(type='number' name='weight' placeholder='목표는 50kg 대...!')
+  input(type='submit' value='저장')
+#weightList
+  | 오늘의 몸무게 = 
+  span#weight
+script(src='/schedule.js')

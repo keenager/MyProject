@@ -1,0 +1,12 @@
+doctype html
+head 
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title 로그인
+form(action="/auth/login_process", method="post") 
+    p
+        input(type="email", name="email", placeholder='email')
+    p 
+        input(type="password", name="password", placeholder='password')
+    p 
+        input(type="submit", value="login")
