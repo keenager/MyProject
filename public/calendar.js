@@ -22,7 +22,7 @@ function displayCalendar(){
     let temp = new Date(year, month);
     let firstDay = temp.getDay() || 7;
     
-    if(year % 4 === 0) lastDate[1] = 29;
+    lastDate[1] = year % 4 === 0 ? 29 : 28;
     let date = 1
     loop1:
     for (let i = 1; i <= 6; i++) {
