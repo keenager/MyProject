@@ -22,10 +22,12 @@ const indexRouter = require('./routes/index');
 const calRouter = require('./routes/calendar');
 const dietRouter = require('./routes/diet');
 const authRouter = require('./routes/auth');
+const scrapRouter = require('./routes/scrap');
 app.use('/', indexRouter);
 app.use('/calendar', calRouter);
 app.use('/diet', dietRouter);
 app.use('/auth', authRouter);
+app.use('/scrap', scrapRouter);
 
 app.use( (req, res, next) => {
     res.status(404).send(`Sorry can't find that.`);
