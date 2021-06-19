@@ -3,8 +3,8 @@ const app = express();
 app.use(express.urlencoded({extended: false}));
 app.use(express.static('public'));
 
-const helmet = require('helmet');
-app.use(helmet());
+// const helmet = require('helmet');
+// app.use(helmet());
 
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
