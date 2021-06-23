@@ -5,10 +5,10 @@ const lastDate = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 displayTitle();
 displayCalendar();
 
-document.getElementById('prsMonthBtn').addEventListener('click', event => presentMonth());
-document.getElementById('prevMonthBtn').addEventListener('click', event => prevMonth());
-document.getElementById('nextMonthBtn').addEventListener('click', event => nextMonth());
-document.getElementById('srchBtn').addEventListener('click', event => 
+document.getElementById('prsMonthBtn').addEventListener('click', presentMonth);
+document.getElementById('prevMonthBtn').addEventListener('click', prevMonth);
+document.getElementById('nextMonthBtn').addEventListener('click', nextMonth);
+document.getElementById('srchBtn').addEventListener('click', () => 
     window.open('https://safind.scourt.go.kr/sf/mysafind.jsp')
 );
 
@@ -114,10 +114,10 @@ function createDivIn(elem){
 }
 
 function deleteCalendar() {
-    for (let i = 1; i <= 6; i++) {
-        let weekTr = document.getElementById('w'+i);
-        while(weekTr.hasChildNodes()){
-            weekTr.removeChild(weekTr.firstChild);
+    let weekTr = document.querySelectorAll('tbody tr');
+    for (let tr of weekTr) {
+        while(tr.hasChildNodes()) {
+            tr.removeChild(tr.firstChild);
         }
     }
 }

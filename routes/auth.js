@@ -4,7 +4,6 @@ const userData = require('./userData');
 
 router.get('/login', (req, res) => {
     res.render('login');
-    console.log(userData);
 });
 
 router.post('/login_process', (req, res) => {
