@@ -1,6 +1,5 @@
 //'스케쥴에서 달력버튼 누르면 현재 월이 아닌 해당 월로 이동하게?';
 let present = new Date();
-const lastDate = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 displayTitle();
 displayCalendar();
@@ -22,13 +21,12 @@ function displayCalendar(){
     let temp = new Date(year, month);
     let firstDay = temp.getDay() || 7;
     
-    lastDate[1] = year % 4 === 0 ? 29 : 28;
-    let date = 1
     loop1:
     for (let i = 1; i <= 6; i++) {
         let weekTr = document.getElementById('w'+i);
         loop2:
         for (let j = 1; j <= 7; j++) {
+            let date = temp.getDate();
             if (i === 1 && j < firstDay) {
                 createTdIn(weekTr);
             } else {
@@ -38,18 +36,13 @@ function displayCalendar(){
                 thisTd.setAttribute('id', dateId);
                 thisTd.addEventListener('click', event => location.href='/calendar/schedule/' + thisTd.id);
                 if (isToday(year, month, date)) {
-                    thisTd.setAttribute('style', 'border: 2px solid blue;');
+                    thisTd.classList.add('today');
                 }
 
-                setTd(thisTd, j, date);
+                displaySchedules( dateId, setTd(thisTd, date) );
 
-                let thisContentsWrap = document.getElementById(date);
-                displaySchedules(dateId, thisContentsWrap);
-
-                if(date === lastDate[month]){
-                    break loop1;
-                }
-                date++;
+                temp.setDate(date + 1);
+                if(month !== temp.getMonth()) break loop1;
             }
         }
     }
@@ -70,14 +63,14 @@ function isToday(year, month, date){
         && date === temp.getDate()
 }
 
-function setTd(td, day, date){
+function setTd(td, date){
     let dateDiv = createDivIn(td);
     dateDiv.textContent = date;
-    dateDiv.classList.add('day' + day);
+    dateDiv.classList.add('date');
 
     let scheduleDiv = createDivIn(td);
     scheduleDiv.classList.add('scheduleDiv');
-    scheduleDiv.setAttribute('id', date);
+    return scheduleDiv;
 }
 
 function displaySchedules(dateId, div){

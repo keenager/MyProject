@@ -21,13 +21,13 @@ td {
   border-bottom: 1px solid;
 }
 
-.day1, .day2, .day3, .day4, .day5, .day6, .day7{
-  height: fit-content;
-  text-align: left;
+.today {
+  border: 2px solid blue;
 }
 
-.day6, .day7{
-  width: fit-content;
+.date{
+  height: fit-content;
+  text-align: left;
 }
 
 .scheduleDiv{
