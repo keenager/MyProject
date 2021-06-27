@@ -1,5 +1,6 @@
 doctype html
 head
+  base(href='/')
   title Calendar for MIYOUNG
   meta(charset='utf8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
@@ -26,7 +27,7 @@ table
         span.menubtn(style='font-size:1rem; cursor:pointer;') &#9776; menu
         button#prsMonthBtn 이번 달
         button#prevMonthBtn <
-        span#yearMonth
+        span#yearMonth #{year}년 #{month}월
         button#nextMonthBtn >
         button#srchBtn 사건 검색
     tr

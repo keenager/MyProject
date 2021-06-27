@@ -1,18 +1,33 @@
-//'스케쥴에서 달력버튼 누르면 현재 월이 아닌 해당 월로 이동하게?';
-let present = new Date();
 
-displayTitle();
-displayCalendar();
-
-document.getElementById('prsMonthBtn').addEventListener('click', presentMonth);
-document.getElementById('prevMonthBtn').addEventListener('click', prevMonth);
-document.getElementById('nextMonthBtn').addEventListener('click', nextMonth);
-document.getElementById('srchBtn').addEventListener('click', () => 
-    window.open('https://safind.scourt.go.kr/sf/mysafind.jsp')
+let yearMonth = document.getElementById("yearMonth").textContent;
+let ymArr = yearMonth.split(' ');
+let present = new Date(
+    +ymArr[0].slice(0,4),
+    +ymArr[1].substr(0,ymArr[1].length-1) - 1
 );
 
-function displayTitle(){
-    document.getElementById("yearMonth").innerHTML = present.getFullYear() + '년 ' + (present.getMonth() + 1) + '월';
+displayCalendar();
+
+document.querySelector('thead').addEventListener('click', event => {
+    if(event.target.id === 'srchBtn') {
+        window.open('https://safind.scourt.go.kr/sf/mysafind.jsp');
+        return       
+    } else if(event.target.id === 'prsMonthBtn') {
+        present = new Date();
+    } else if(event.target.id === 'prevMonthBtn') {
+        present.setMonth(present.getMonth() - 1);
+    } else if(event.target.id === 'nextMonthBtn') {
+        present.setMonth(present.getMonth() + 1);
+    } else {
+        return
+    }
+    changeCalendar(present);
+});
+
+function changeCalendar(present) {
+    let year = present.getFullYear();
+    let month = present.getMonth() + 1;
+    location.href = `/calendar/${year}-${month}`
 }
 
 function displayCalendar(){
@@ -103,35 +118,5 @@ function displaySchedules(dateId, div){
 }
 
 function createDivIn(elem){
-    return elem.appendChild(document.createElement('div'));
-}
-
-function deleteCalendar() {
-    let weekTr = document.querySelectorAll('tbody tr');
-    for (let tr of weekTr) {
-        while(tr.hasChildNodes()) {
-            tr.removeChild(tr.firstChild);
-        }
-    }
-}
-
-function presentMonth(){
-    present = new Date();
-    refresh();
-}
-
-function prevMonth(){
-    present.setMonth(present.getMonth() - 1);
-    refresh();
-}
-
-function nextMonth(){
-    present.setMonth(present.getMonth() + 1);
-    refresh();
-}
-
-function refresh() {
-    displayTitle();
-    deleteCalendar();
-    displayCalendar();
+    return elem.appendChild(document.createElement('div'))
 }

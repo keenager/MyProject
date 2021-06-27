@@ -38,7 +38,7 @@ app.use( (err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-const PORT = 80;
+const PORT = 8080;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}...`);
 });

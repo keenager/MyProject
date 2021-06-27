@@ -1,14 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const calmod = require('../lib/calmod');
-
+// router에서 단순 /이면 /현재날짜 로 인식, 그외에 /:yearMonth
 router.get('/', (req, res) => {
     if(!req.session.is_logined) {
         res.redirect('/');
     }
+    let date = new Date();
+
     res.render('calendar', {
         is_logined: req.session.is_logined,
         nickname: req.session.nickname,
+        year: date.getFullYear(),
+        month: date.getMonth() + 1,
+    });
+});
+
+router.get('/:yearMonth', (req, res) => {
+    if(!req.session.is_logined) {
+        res.redirect('/');
+    }
+    let arr = req.params.yearMonth.split('-');
+
+    res.render('calendar', {
+        is_logined: req.session.is_logined,
+        nickname: req.session.nickname,
+        year: arr[0],
+        month: +arr[1],
     });
 });
 

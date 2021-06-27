@@ -14,7 +14,10 @@ thead {
 }
 
 button {
-  padding: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 td {
@@ -53,6 +56,11 @@ fieldset{
 
 input, textarea, button{
   font-size: 1rem;
+}
+
+.menubtn {
+  position: absolute;
+  left: 5px;
 }
 
 .sidenav {

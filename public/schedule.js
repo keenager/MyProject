@@ -10,9 +10,9 @@ const Auto = {
     ㅍㄱ : '판결',
 }
 
-document.getElementById('toCalendarButton').addEventListener('click', event => location.href='/calendar');
-
 let dateId = document.getElementById('titleDate').textContent;
+let yearMonth = dateId.substr(0, 7);
+document.getElementById('toCalendarButton').addEventListener('click', event => location.href=`/calendar/${yearMonth}`);
 
 document.getElementById('scheduleInput').addEventListener('keyup', (event)=>{
     if(event.keyCode === 13){
