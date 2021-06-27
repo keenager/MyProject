@@ -38,8 +38,9 @@ app.use( (err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-app.listen(8080, () => {
-    console.log('App is listening on port 8080!')
+const PORT = 80;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}...`);
 });
 
 
