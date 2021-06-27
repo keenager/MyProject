@@ -60,7 +60,9 @@ input, textarea, button{
 
 .menubtn {
   position: absolute;
-  left: 5px;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
 }
 
 .sidenav {
