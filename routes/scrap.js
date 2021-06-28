@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const https = require('https');
 const cheerio = require('cheerio');
-const { next } = require('cheerio/lib/api/traversing');
 
 router.get('/', (req, res, next) => {
     // if(!req.session.is_logined){
@@ -54,33 +53,29 @@ router.get('/', (req, res, next) => {
     });
     next();
 }, (req, res, next) => {
-    let sisain_contents = '';
 
-    https.get('https://www.sisain.co.kr/news/articleList.html', (stream) => {
+    function getSisainContents(data, className) {
+        const $ = cheerio.load(data);
+        let list = $(className);
+        let sisain_contents = '';
+        for(let i = 0; i < list.length; i++) {
+            let link = 'https://www.sisain.co.kr' + list.eq(i).children('a').attr('href');
+            let text = list.eq(i).text();
+            sisain_contents += `<p><a href='${link}'>${text}</a></p>`;
+        }
+        return sisain_contents
+    }
+
+    https.get('https://www.sisain.co.kr', (stream) => {
         let data = '';
         stream.on('data', chunk => data += chunk);
         stream.on('end', () => {
-            const $ = cheerio.load(data);
-            let $list1 = $('section.content ul').children();
-            for(let i = 0; i < $list1.length; i++) {
-                let link = 'https://www.sisain.co.kr' + $list1.eq(i).children('a').attr('href');
-                let text = $list1.eq(i).text();
-                sisain_contents += `<p><a href='${link}'>${text}</a></p>`;
-            }
             res.write('<h2>시사인 많이 본 기사</h2>')
-            res.write(sisain_contents);
+            res.write(getSisainContents(data, '.auto-d05 .auto-col'));
 
-            sisain_contents = '';
-            let $list2 = $('section.content').children().eq(2).children();
-            for(let i = 0; i < $list2.length; i++) {
-                let link = 'https://www.sisain.co.kr' + $list2.eq(i).children('a').attr('href');
-                let text = $list2.eq(i).text();
-                sisain_contents += `<p><a href='${link}'>${text}</a></p>`;
-            }
             res.write('<h2>시사인 주요기사</h2>')
-            res.write(sisain_contents);
+            res.write(getSisainContents(data, '.auto-d04 .auto-col'));
             res.end();
-
         });
     });
 });
