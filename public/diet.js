@@ -77,12 +77,10 @@ function displayChart(elemId, config, startDate) {
 }
 
 function modifyMonth(m){
-    let month = m + 1;
-    let modifiedMonth = month < 10 ? '0'+month : month; 
-    return modifiedMonth;
+    let realMonth = m + 1;
+    return realMonth < 10 ? '0'+realMonth : realMonth
 }
 
 function modifyDate(d){
-    let modifiedDate = d < 10 ? '0'+d : d; 
-    return modifiedDate;
+    return d < 10 ? '0'+d : d; 
 }
