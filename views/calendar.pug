@@ -5,11 +5,14 @@ head
   meta(charset='utf8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
   link(rel='stylesheet' href='calendar.css')
+  link(rel='stylesheet' href='sideNavi.css')
+
 #mySidenav.sidenav
   a.closebtn(href='javascript:void(0)') &times;
   a(href='/') Home 
   a(href='/calendar') Calendar
   a(href='/diet') Diet Management
+  a(href='/book') Book Schedule
   a(href='/scrap') Scrap
 span #{nickname}
 if is_logined

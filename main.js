@@ -21,11 +21,13 @@ app.set('view engine', 'pug');
 const indexRouter = require('./routes/index');
 const calRouter = require('./routes/calendar');
 const dietRouter = require('./routes/diet');
+const bookRouter = require('./routes/book');
 const authRouter = require('./routes/auth');
 const scrapRouter = require('./routes/scrap');
 app.use('/', indexRouter);
 app.use('/calendar', calRouter);
 app.use('/diet', dietRouter);
+app.use('/book', bookRouter);
 app.use('/auth', authRouter);
 app.use('/scrap', scrapRouter);
 

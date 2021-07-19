@@ -1,0 +1,50 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(http-equiv='X-UA-Compatible' content='IE=edge')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Book Schedule Test
+  link(rel='stylesheet' href='sideNavi.css')
+  style.
+    input[type=number] {
+    width: 45px;
+    }
+#mySidenav.sidenav
+  a.closebtn(href='javascript:void(0)') &times;
+  a(href='/') Home 
+  a(href='/calendar') Calendar
+  a(href='/diet') Diet Management
+  a(href='/book') Book Schedule
+  a(href='/scrap') Scrap
+span #{nickname}
+if is_logined
+    |  | 
+    a(href='/auth/logout') 로그아웃
+else 
+    a(href='/auth/login') 로그인
+br
+span.menubtn &#9776; menu
+#inputDiv
+  | 총 페이지: 
+  input#totalPage(type='number' name='totalPage')
+  br
+  | 하루 목표치: 
+  input#goalPage(type='number' name='goalpage')
+  br
+  input#fromToday(type='radio' name='basis' value='fromToday' checked='')
+  label(for='fromToday') 오늘부터
+  input#fromSpecDate(type='radio' name='basis' value='fromSpecDate')
+  label(for='fromSpecDate') 특정일부터
+  input#specDate(type='date' name='specDate')
+  br
+  button#button 계산
+  br
+#resultDiv
+  table#table
+    thead
+      tr
+        th 날짜
+        th 페이지
+    tbody
+script(src='bookSchedule.js')
+script(src='sideNavi.js')
