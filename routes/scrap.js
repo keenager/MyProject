@@ -43,6 +43,9 @@ function getTitleLink(data, className) {
     let $list = $(className);
     for(let i = 0; i < $list.length; i++) {
         let link = $list.eq(i).children('a').attr('href');
+        if(className.includes('auto-col')) {
+            link = 'https://www.sisain.co.kr' + link;
+        }
         let text = $list.eq(i).children('a').text();
         result += `<p><a href='${link}'>${text}</a></p>`;
     }
