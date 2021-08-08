@@ -1,0 +1,45 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(http-equiv='X-UA-Compatible' content='IE=edge')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Case Search
+  link(rel='stylesheet' href='sideNavi.css')
+  link(rel='stylesheet' href='case.css')
+#mySidenav.sidenav
+  a.closebtn(href='javascript:void(0)') &times;
+  a(href='/') Home 
+  a(href='/calendar') Calendar
+  a(href='/case') Case Search
+  a(href='/diet') Diet Management
+  a(href='/book') Book Schedule
+  a(href='/scrap') Scrap
+span #{nickname}
+if is_logined
+    |  | 
+    a(href='/auth/logout') 로그아웃
+else 
+    a(href='/auth/login') 로그인
+br
+span.menubtn &#9776; menu
+
+table 
+  tr 
+    td 
+      form(action='/case/cookie_write' method='post')
+        p safind_string :
+        textarea(name='cookie' id='cookie' cols='30' rows='10' placeholder='safind_string 값을 입력하세요.')
+        input(type='submit' value='저장')
+    td(style='text-align: left')
+      p 쿠키값 찾는 방법 : 
+      p 1. 크롬에서 F12 또는 'Ctrl + Shift + I'를 눌러 개발자도구를 연다.
+      p 2. 'Elements, Console ...' 등 여러 탭이 있는데 그중에서 'Application' 탭을 누른다(탭이 안보이면 '>>' 누르기).
+      p 3. 'Storage > Cookies > https://safind.scourt.go.kr' 클릭.
+      p 4. 여러 개의 데이터 중에서 'Name'이 'safind_string'인 부분 클릭.
+      p 5. 이것의 Value(%BC%F6...형식으로 된 매우 긴 문자열) 값을 복사하여, 왼쪽에 붙여넣고, 저장 버튼 클릭!!!
+button 사건 불러오기
+
+#caseList 
+
+script(src='sideNavi.js')
+script(src='case.js') 
