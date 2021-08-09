@@ -20,13 +20,11 @@ async function getCaseList() {
 }
 
 function display(cases) {
+    let listElem = document.getElementById('caseList');
     for(aCase of cases) {
         for(key in aCase) {
-            if(key === '사건번호') {
-                document.getElementById('caseList').insertAdjacentHTML('beforeend', `<h3>${key} : ${aCase[key]} </h3>`);
-            } else {
-                document.getElementById('caseList').insertAdjacentHTML('beforeend', '<table>' + aCase[key] + '</table><br>');
-            }
+            listElem.insertAdjacentHTML('beforeend', '<table>' + aCase[key] + '</table><br>');
         }
+        listElem.insertAdjacentHTML('beforeend', '----------------------------------------------------------');
     }
 }
