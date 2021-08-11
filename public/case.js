@@ -25,6 +25,7 @@ function displayList(list) {
 
     let elems = document.querySelectorAll('b a');
     for(let elem of elems) {
+        elem.setAttribute('href', 'javascript:void(0)');
         elem.setAttribute('onclick', 'handleCaseContent(this)');
     }
 }
