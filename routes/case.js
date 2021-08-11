@@ -20,8 +20,12 @@ router.post('/cookie_write', (req, res) => {
     casemod.cookie_write(req, res);
 });
 
-router.get('/case_read', (req, res) => {
-    casemod.case_read(req, res);
+router.get('/caseList_read', (req, res) => {
+    casemod.caseList_read(req, res);
 });
+
+router.get('/caseContent_read/:caseNumber', (req, res) => {
+    casemod.caseContent_read(req, res);
+})
 
 module.exports = router;
