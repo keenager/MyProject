@@ -25,27 +25,42 @@ else
     a(href='/auth/login') 로그인
 br
 span.menubtn &#9776; menu
-#inputDiv
-  | 총 페이지: 
-  input#totalPage(type='number' name='totalPage')
-  br
-  | 하루 목표치: 
-  input#goalPage(type='number' name='goalpage')
-  br
-  input#fromToday(type='radio' name='basis' value='fromToday' checked='')
-  label(for='fromToday') 오늘부터
-  input#fromSpecDate(type='radio' name='basis' value='fromSpecDate')
-  label(for='fromSpecDate') 특정일부터
-  input#specDate(type='date' name='specDate')
-  br
-  button#button 계산
-  br
-#resultDiv
-  table#table
-    thead
-      tr
-        th 날짜
-        th 페이지
-    tbody
+
+article
+  section#inputDiv(style='display: inline-block')
+    fieldset
+      legend 계산하기
+      | 총 페이지: 
+      input#totalPage(type='number' name='totalPage')
+      br
+      | 하루 목표치: 
+      input#goalPage(type='number' name='goalpage')
+      br
+      input#fromToday(type='radio' name='basis' value='fromToday' checked='')
+      label(for='fromToday') 오늘부터
+      input#fromSpecDate(type='radio' name='basis' value='fromSpecDate')
+      label(for='fromSpecDate') 특정일부터
+      input#specDate(type='date' name='specDate')
+      br
+      button#calBtn 계산
+      br
+  section#listDiv(style='display: inline-block')
+    fieldset
+      legend 불러오기
+      #savedList 저장된 스케줄
+        ul 
+  section#resultDiv
+    table#table
+      thead
+        tr
+          th 날짜
+          th 목표
+          th 실행
+          th
+            button 갱신
+      tbody
+    button#saveBtn 저장하기
+    button#delBtn 삭제하기
+
 script(src='bookSchedule.js')
 script(src='sideNavi.js')
