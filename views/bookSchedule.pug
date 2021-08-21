@@ -9,6 +9,9 @@ head
     input[type=number] {
     width: 45px;
     }
+    td {
+      padding : 5px;
+    }
 #mySidenav.sidenav
   a.closebtn(href='javascript:void(0)') &times;
   a(href='/') Home 
@@ -43,6 +46,7 @@ article
       input#specDate(type='date' name='specDate')
       br
       button#calBtn 계산
+      button#initBtn 초기화
       br
   section#listDiv(style='display: inline-block')
     fieldset
@@ -52,12 +56,14 @@ article
   section#resultDiv
     table#table
       thead
+        tr 
+          th(colspan='3')
         tr
           th 날짜
           th 목표
           th 실행
           th
-            button 갱신
+            button#updateBtn 갱신
       tbody
     button#saveBtn 저장하기
     button#delBtn 삭제하기

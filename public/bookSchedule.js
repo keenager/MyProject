@@ -1,12 +1,18 @@
-let scdConfig = {basis: 'fromToday'};
-let scdData = {};
+let scdConfig = {
+    basis: 'fromToday',
+    type: 'new',
+    title: '새로운 책',
+    totalPage: '',
+    goalPage: '',
+    specDate: '',
+};
+let scdData = {};  // data + config
+let curSavedData = new Object();
 
 //저장된 스케줄
 let listDiv = document.querySelector('#savedList ul');
-let curSavedData = new Object();
-let selectedDataTitle = '';
-let lists = new Array();
-if( localStorage.getItem('bookSchedule') === null ) {
+let lists = [];
+if( localStorage.getItem('bookSchedule') === '{}' || localStorage.getItem('bookSchedule') === null ) {
     listDiv.parentElement.innerHTML = '저장된 자료가 없습니다.';
 } else {
     curSavedData = JSON.parse(localStorage.getItem('bookSchedule'));
@@ -23,33 +29,39 @@ if( localStorage.getItem('bookSchedule') === null ) {
 let inputs = document.querySelectorAll('input[type=radio]');
 for (input of inputs) {
     input.onchange = event => {
-        scdConfig.basis = event.currentTarget.value;
+        updateConfig(event.currentTarget.value, 'new', '새로운 책', +totalPage.value, +goalPage.value, specDate.value);
         setScd(+totalPage.value, +goalPage.value);
         displayScd(scdData);
-        scdConfig.type = 'new';
-        selectedDataTitle = '';
     }
 }
 
 calBtn.onclick = () => {
+    updateConfig(
+        fromToday.checked ? fromToday.value : fromSpecDate.value,
+        'new', '새로운 책', +totalPage.value, +goalPage.value, specDate.value
+    );
     setScd(+totalPage.value, +goalPage.value);
     displayScd(scdData);
-    scdConfig.type = 'new';
-    selectedDataTitle = '';
 }
 
 let listElemArr = Array.from(document.querySelectorAll('li > a'));
 for(let listElem of listElemArr) {
     listElem.addEventListener('click', event => {
-        selectedDataTitle = event.currentTarget.textContent;
-        scdData = curSavedData[selectedDataTitle];
+        scdData = curSavedData[event.currentTarget.textContent];
+        updateConfig(
+            scdData['scdConfig'].basis, 
+            'saved', 
+            event.currentTarget.textContent, 
+            scdData['scdConfig'].totalPage,
+            scdData['scdConfig'].goalPage,
+            scdData['scdConfig'].specDate
+        );
         displayScd(scdData);
-        scdConfig.type = 'saved';
     });
 }
 
 saveBtn.onclick = () => {
-    let title = prompt('책 제목을 입력하세요.', scdConfig.type === 'new' ? '' : selectedDataTitle);
+    let title = prompt('책 제목을 입력하세요.', scdConfig.title);
     if(title === null) {
         return
     } else if(title === '') {
@@ -64,15 +76,28 @@ delBtn.onclick = () => {
     if(scdConfig.type === 'new') {
         return
     }
-    delete curSavedData[selectedDataTitle];
+    delete curSavedData[scdConfig.title];
     localStorage.setItem('bookSchedule', JSON.stringify(curSavedData, null, 2));
     location.reload();
 }
 
+initBtn.onclick = () => {
+    location.reload();
+}
+
+updateBtn.onclick = () => {
+    updateScd(+totalPage.value, +goalPage.value);
+    displayScd(scdData);
+}
+
 //함수
-function calcScd(totalPage, goalpage) {
-    scdConfig.day = Math.ceil(totalPage / goalpage);
-    scdConfig.last = totalPage % goalpage;
+function updateConfig(basis, type, title, total, goal, spec) {
+    scdConfig.basis = basis;
+    scdConfig.type = type;
+    scdConfig.title = title;
+    scdConfig.totalPage = total;
+    scdConfig.goalPage = goal;
+    scdConfig.specDate = spec;
 }
 
 function getYMD(idx) {
@@ -81,27 +106,82 @@ function getYMD(idx) {
     return date
 }
 
-function setScd(totalPage, goalpage) {
-    calcScd(totalPage, goalpage);
-    scdData = {};
+function setScd(totalPage, goalPage) {
+    if(scdConfig.type === 'new') {
+        scdData = {};
+    }
+
     let startPage = 1;
     let endPage;
     let ymdStr, pageStr;
-    for (let i = 0; i < scdConfig.day; i++) {
-        endPage = i === scdConfig.day - 1 ?
-                startPage + scdConfig.last - 1 :
-                startPage + goalpage - 1;
-        ymdStr = `${getYMD(i).getFullYear()}년 ${getYMD(i).getMonth() + 1}월 ${getYMD(i).getDate()}일:`;
-        pageStr =  `${startPage}쪽 ~ ${endPage}쪽`;
+    let i = 0;
+
+    while(startPage <= totalPage) {
+        let result = startPage + goalPage - 1;
+        endPage = result < totalPage ? result : totalPage;
+        ymdStr = getYMD(i).getFullYear() + '-' + (getYMD(i).getMonth() + 1) + '-' + getYMD(i).getDate();
+        pageStr = startPage + '~' + endPage;
         scdData[ymdStr] = pageStr;
         startPage = endPage + 1;
+        i++;
     }
+    scdData['scdConfig'] = scdConfig;
+}
+
+function updateScd(totalPage, goalPage) {
+    let tempData = {};
+    let startPage = 1;
+    let endPage;
+    let ymdStr, pageStr;
+    let i = 0;
+    let isPassed = false;
+    let inputElems = Array.from(document.querySelectorAll('tbody tr input'));
+
+    while(startPage <= totalPage) { 
+        ymdStr = getYMD(i).getFullYear() + '-' + (getYMD(i).getMonth() + 1) + '-' + getYMD(i).getDate();
+
+        let exePage = '';
+        if(inputElems[i] && inputElems[i].value) {
+            exePage = inputElems[i].value;
+        
+            let result = (isFinite(exePage) && exePage !== '' && exePage !== null) ?
+                            +exePage :
+                            startPage + goalPage - 1;
+            endPage = result < totalPage ? result : totalPage;
+            isPassed = true;
+        } else if(isPassed) {
+            let result = startPage + goalPage - 1;
+            endPage = result < totalPage ? result : totalPage;
+        } else {
+            endPage = +scdData[ymdStr].split('~')[1];
+        }
+
+        pageStr = startPage + '~' + endPage;
+        tempData[ymdStr] = pageStr;
+        startPage = endPage + 1;
+        i++;
+    }
+    scdData = tempData;
+    scdData['scdConfig'] = scdConfig;
 }
 
 function displayScd(data) {
+    totalPage.value = scdConfig.totalPage;
+    goalPage.value = scdConfig.goalPage;
+    if(scdConfig.basis === 'fromToday') {
+        fromToday.checked = true;
+    } else {
+        fromSpecDate.checked = true;
+    }
+    specDate.value = scdConfig.specDate;
+    
+    let titleElem = document.querySelector('thead > tr > th');
+    titleElem.textContent = scdConfig.title;
+    
     let tbody = document.querySelector('tbody');
     tbody.innerHTML = '';
     for(let key in data) {
+        if(key === 'scdConfig') continue
         let newRow = tbody.insertRow(-1);
         newRow.insertCell(0).innerHTML = key;
         newRow.insertCell(1).innerHTML = data[key];        
