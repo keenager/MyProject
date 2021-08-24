@@ -7,20 +7,15 @@ head
   link(rel='stylesheet' href='calendar.css')
   link(rel='stylesheet' href='sideNavi.css')
 
-#mySidenav.sidenav
-  a.closebtn(href='javascript:void(0)') &times;
-  a(href='/') Home 
-  a(href='/calendar') Calendar
-  a(href='/case') Case Search
-  a(href='/diet') Diet Management
-  a(href='/book') Book Schedule
-  a(href='/scrap') Scrap
 span #{nickname}
 if is_logined
     |  | 
     a(href='/auth/logout') 로그아웃
 else 
     a(href='/auth/login') 로그인
+
+include sideNavi.pug
+
 table
   colgroup
     col(span='5' style='width: 18%;')
@@ -28,7 +23,6 @@ table
   thead
     tr
       td(colspan='7')
-        span.menubtn &#9776; menu
         button#prsMonthBtn 이번 달
         button#prevMonthBtn <
         span#yearMonth #{year}년 #{month}월

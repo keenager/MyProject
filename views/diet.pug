@@ -5,14 +5,7 @@ head
   title Diet Management
   link(rel='stylesheet' href='calendar.css')
   link(rel='stylesheet' href='sideNavi.css')
-#mySidenav.sidenav
-  a.closebtn(href='javascript:void(0)') &times;
-  a(href='/') Home 
-  a(href='/calendar') Calendar
-  a(href='/case') Case Search
-  a(href='/diet') Diet Management
-  a(href='/book') Book Schedule
-  a(href='/scrap') Scrap
+
 span #{nickname}
 if is_logined
     |  | 
@@ -20,7 +13,9 @@ if is_logined
 else 
     a(href='/auth/login') 로그인
 br
-span.menubtn &#9776; menu
+
+include sideNavi.pug
+
 ul
   li 
     | 이번 주(

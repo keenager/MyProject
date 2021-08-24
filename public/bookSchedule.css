@@ -1,0 +1,54 @@
+section {
+    margin-bottom: 1em;
+}
+
+/* control 부분 */
+
+/* 플렉스 처리 */
+.control {
+    display: flex;
+}
+.control #inputDiv {
+    flex: 2;
+}
+.control #listDiv {
+    flex: 1;
+    min-width: 100px;
+}
+
+/* 계산하기 부분 */
+input[type=number] {
+    width: 45px;
+}
+.control button {
+    margin: .5em;
+}
+
+/* 불러오기 부분 */
+ul {
+    padding-left: 1em;
+}
+
+/* display 부분 */
+table {
+    border-collapse: collapse;
+    border-bottom: 1px solid black;
+}
+th {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+td:nth-child(n+1):nth-child(-n+2) {
+    border-right: 1px dashed black;
+}
+td {
+    padding : 5px;
+}
+.display > button {
+    margin: .5em;
+}
+
+/* 공통 */
+
+
+

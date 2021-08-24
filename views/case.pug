@@ -6,14 +6,7 @@ head
   title Case Search
   link(rel='stylesheet' href='sideNavi.css')
   link(rel='stylesheet' href='case.css')
-#mySidenav.sidenav
-  a.closebtn(href='javascript:void(0)') &times;
-  a(href='/') Home 
-  a(href='/calendar') Calendar
-  a(href='/case') Case Search
-  a(href='/diet') Diet Management
-  a(href='/book') Book Schedule
-  a(href='/scrap') Scrap
+
 span #{nickname}
 if is_logined
     |  | 
@@ -21,7 +14,8 @@ if is_logined
 else 
     a(href='/auth/login') 로그인
 br
-span.menubtn &#9776; menu
+
+include sideNavi.pug
 
 table 
   tr 

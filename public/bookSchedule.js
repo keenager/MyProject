@@ -175,7 +175,7 @@ function displayScd(data) {
     }
     specDate.value = scdConfig.specDate;
     
-    let titleElem = document.querySelector('thead > tr > th');
+    let titleElem = document.querySelector('table > caption');
     titleElem.textContent = scdConfig.title;
     
     let tbody = document.querySelector('tbody');
