@@ -24,7 +24,7 @@ document.getElementById('scheduleInput').addEventListener('keyup', (event)=>{
 document.getElementById('scheduleInput').addEventListener('input', function(event){
     for(key in Auto){
         if(event.target.value.includes(key + ' ')){
-        event.target.value = event.target.value.replace(key + ' ', Auto[key] + ' ');
+            event.target.value = event.target.value.replace(key + ' ', Auto[key] + ' ');
         }
     }
 });
@@ -41,7 +41,7 @@ function inputCheck(self){
     }
 }
 
-let List = {
+const List = {
     clear : function(elem){
         while(elem.hasChildNodes()){
             elem.removeChild(elem.firstChild);

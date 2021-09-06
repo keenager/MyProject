@@ -1,9 +1,12 @@
 doctype html
 head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  link(rel='stylesheet' href='/schedule.css')
+  include headTemplate.pug
   title Schedule list
+  link(rel='stylesheet' href='schedule.css')
+  script(defer src='schedule.js')
+
+include sideNavi.pug
+
 button#toCalendarButton 달력
 h2
   | Schedule List (
@@ -24,4 +27,3 @@ form(action='/diet/db_write' method='post' onsubmit='return inputCheck(this)')
 #weightList
   | 오늘의 몸무게 = 
   span#weight
-script(src='/schedule.js')

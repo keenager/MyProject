@@ -29,7 +29,7 @@ if( localStorage.getItem('bookSchedule') === '{}' || localStorage.getItem('bookS
 let inputs = document.querySelectorAll('input[type=radio]');
 for (input of inputs) {
     input.onchange = event => {
-        updateConfig(event.currentTarget.value, 'new', '새로운 책', +totalPage.value, +goalPage.value, specDate.value);
+        updateConfig(event.target.value, 'new', '새로운 책', +totalPage.value, +goalPage.value, specDate.value);
         setScd(+totalPage.value, +goalPage.value);
         displayScd(scdData);
     }
@@ -47,11 +47,11 @@ calBtn.onclick = () => {
 let listElemArr = Array.from(document.querySelectorAll('li > a'));
 for(let listElem of listElemArr) {
     listElem.addEventListener('click', event => {
-        scdData = curSavedData[event.currentTarget.textContent];
+        scdData = curSavedData[event.target.textContent];
         updateConfig(
             scdData['scdConfig'].basis, 
             'saved', 
-            event.currentTarget.textContent, 
+            event.target.textContent, 
             scdData['scdConfig'].totalPage,
             scdData['scdConfig'].goalPage,
             scdData['scdConfig'].specDate

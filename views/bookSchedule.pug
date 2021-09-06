@@ -1,11 +1,9 @@
 doctype html
 head
-  meta(charset='UTF-8')
-  meta(http-equiv='X-UA-Compatible' content='IE=edge')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title Book Schedule Test
-  link(rel='stylesheet' href='sideNavi.css')
+  include headTemplate.pug
+  title Book Schedule
   link(rel='stylesheet' href='bookSchedule.css')
+  script(defer src='bookSchedule.js')
 
 section.header
   span #{nickname}
@@ -55,6 +53,3 @@ section.display
     tbody
   button#saveBtn 저장하기
   button#delBtn 삭제하기
-
-script(src='bookSchedule.js')
-script(src='sideNavi.js')

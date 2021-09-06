@@ -1,11 +1,9 @@
 doctype html
 head
-  base(href='/')
+  include headTemplate.pug
   title Calendar for MIYOUNG
-  meta(charset='utf8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
   link(rel='stylesheet' href='calendar.css')
-  link(rel='stylesheet' href='sideNavi.css')
+  script(defer src='calendar.js')
 
 span #{nickname}
 if is_logined
@@ -18,8 +16,8 @@ include sideNavi.pug
 
 table
   colgroup
-    col(span='5' style='width: 18%;')
-    col(span='2' style='width: 5%;')
+    col(span='7' style='width: 14%;')
+    //- col(span='2' style='width: 5%;')
   thead
     tr
       td(colspan='7')
@@ -43,5 +41,3 @@ table
     tr#w4
     tr#w5
     tr#w6
-script(src='calendar.js')
-script(src='sideNavi.js')

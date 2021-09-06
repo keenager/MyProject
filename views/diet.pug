@@ -1,10 +1,9 @@
 doctype html
 head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  include headTemplate.pug
   title Diet Management
-  link(rel='stylesheet' href='calendar.css')
-  link(rel='stylesheet' href='sideNavi.css')
+  script(defer src='https://cdn.jsdelivr.net/npm/chart.js')
+  script(defer src='diet.js')
 
 span #{nickname}
 if is_logined
@@ -29,6 +28,3 @@ ul
     | ) 보기
   div
     canvas#monthlyChart
-script(src='https://cdn.jsdelivr.net/npm/chart.js')
-script(src='diet.js')
-script(src='sideNavi.js')
