@@ -1,0 +1,30 @@
+doctype html
+head
+  include headTemplate.pug
+  title Book Schedule
+
+include sideNavi.pug
+
+section.article_container 
+  article#hani_editorial 
+  article#hani_most 
+  article#khan_opinion 
+  article#khan_most 
+  article#sisain1 
+  article#sisain2 
+
+script(type='text/javascript').
+  let nameTopics = Array.from(document.querySelectorAll('article')).map(item => item.id);
+  let requests = nameTopics.map(nameTopic => fetch('/scrap/getArticles/' + nameTopic));
+  Promise.all(requests)
+    .then(responses => Promise.all(responses.map(r => r.text())))
+    .then(lists => {
+      for(let i = 0; i < lists.length; i++) {
+        document.getElementById(nameTopics[i]).innerHTML = lists[i];
+      }
+    });
+
+  //- fetch('/scrap/getArticles/hani_editorial')
+  //-   .then(res => res.text())
+  //-   .then(data => document.querySelector('#hani_editorial').innerHTML = data);
+  
