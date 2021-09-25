@@ -1,0 +1,29 @@
+doctype html
+head
+  include headTemplate.pug
+  title Price Compare
+  link(rel='stylesheet' href='priceCompare.css')
+  script(defer src='priceCompare.js')
+
+section.header
+  span #{nickname}
+  if is_logined
+    |  | 
+    a(href='/auth/logout') 로그아웃
+  else 
+    a(href='/auth/login') 로그인
+  br
+
+include sideNavi.pug
+
+section.query
+  input(type="text", name="qs", placeholder="검색어를 입력하세요." onkeyup="enterkey()")
+  button 검색
+
+section.title 
+  h3 신세계
+  h3 홈플러스
+
+section.result_container
+  #ssg.result
+  #hp.result

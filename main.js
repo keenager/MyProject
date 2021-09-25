@@ -24,6 +24,7 @@ const calRouter = require('./routes/calendar');
 const caseRouter = require('./routes/case');
 const dietRouter = require('./routes/diet');
 const bookRouter = require('./routes/book');
+const priceRouter = require('./routes/price');
 const scrapRouter = require('./routes/scrap');
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
@@ -31,6 +32,7 @@ app.use('/calendar', calRouter);
 app.use('/case', caseRouter);
 app.use('/diet', dietRouter);
 app.use('/book', bookRouter);
+app.use('/priceCompare', priceRouter);
 app.use('/scrap', scrapRouter);
 
 app.use( (req, res, next) => {

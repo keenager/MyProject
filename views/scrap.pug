@@ -18,11 +18,10 @@ script(type='text/javascript').
   let requests = nameTopics.map(nameTopic => fetch('/scrap/getArticles/' + nameTopic));
   Promise.all(requests)
     .then(responses => Promise.all(responses.map(r => r.text())))
-    .then(lists => {
-      for(let i = 0; i < lists.length; i++) {
-        document.getElementById(nameTopics[i]).innerHTML = lists[i];
-      }
-    });
+    .then(lists => lists.forEach( (item, index) => {
+      document.getElementById(nameTopics[index]).innerHTML = item;
+    }));
+
 
   //- fetch('/scrap/getArticles/hani_editorial')
   //-   .then(res => res.text())

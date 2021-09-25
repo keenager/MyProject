@@ -1,0 +1,22 @@
+.title {
+    display: flex;
+}
+
+h3 {
+    flex-basis: 50%;
+    text-align: center;
+}
+
+.result_container {
+    display: flex;
+}
+
+.result {
+    flex-wrap: wrap;
+    flex-basis: 50%;
+}
+
+.item {
+    display: block;
+    margin-bottom: 5px;
+}
