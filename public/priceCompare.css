@@ -1,3 +1,7 @@
+section {
+    margin: 5px 0px;
+}
+
 .title {
     display: flex;
 }
@@ -19,4 +23,20 @@ h3 {
 .item {
     display: block;
     margin-bottom: 5px;
+}
+
+.list_container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.list {
+    justify-content: space-around;
+    margin: 5px;
+}
+
+.delBtn {
+    
+    margin-left: 5px;
+    padding: 2px;
 }
