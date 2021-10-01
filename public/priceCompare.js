@@ -2,50 +2,30 @@ const marts = ['ssg', 'hp'];
 let savedQuery;
 
 //저장된 스케줄
-let listDiv = document.querySelector('.list_container');
+const listDiv = document.querySelector('.list_container');
 if( localStorage.getItem('priceCompare') === '[]' || localStorage.getItem('priceCompare') === null ) {
     listDiv.innerHTML = '저장된 목록이 없습니다.';
     savedQuery = [];
 } else {
-    savedQuery = JSON.parse(localStorage.getItem('priceCompare'));
-    for(let item of savedQuery) {
-        listDiv.insertAdjacentHTML('beforeend', `
-            <div class='list'><a href='javascript:void(0)'>${item}</a><button class='delBtn'>X</button></div>
-            `
-        );
-    }
-
-    //검색 목록 클릭 이벤트
-    let listElemArr = Array.from(document.querySelectorAll('li > a'));
-    for(let listElem of listElemArr) {
-        listElem.addEventListener('click', event => {
-            document.querySelector('input').value = event.target.textContent;
-        });
-    }
-    //검색 목록 삭제
-    let xElemArr = Array.from(document.querySelectorAll('.delBtn'));
-    for(let xElem of xElemArr) {
-        xElem.addEventListener('click', event => {
-            let index = savedQuery.findIndex(item => item === event.target.previousSibling.textContent);
-            savedQuery.splice(index, 1);
-            localStorage.setItem('priceCompare', JSON.stringify(savedQuery));
-            window.location.reload();
-        });
-    }
+    loadSavedLists();
+    addEventToLists();    
 }
 
 function enterkey() {
     if(window.event.keyCode === 13) {
-        document.querySelector('button').click();
+        document.querySelector('#schBtn').click();
     }
 }
 
-document.querySelector('button').addEventListener('click', () => {
+document.querySelector('#schBtn').addEventListener('click', () => {
     let query = document.querySelector('input').value;
     if(!savedQuery.includes(query)) {
         savedQuery.push(query);
+        localStorage.setItem('priceCompare', JSON.stringify(savedQuery));
+        listDiv.innerHTML = '';
+        loadSavedLists();
+        addEventToLists();
     }
-    localStorage.setItem('priceCompare', JSON.stringify(savedQuery));
 
     marts.forEach(mart => document.querySelector('#' + mart).innerHTML = '');
     let requests = marts.map(mart => fetch(`/priceCompare/get_prices/${mart}/${query}`));
@@ -63,3 +43,38 @@ document.querySelector('button').addEventListener('click', () => {
         }
     }));    
 });
+
+function loadSavedLists() {
+    savedQuery = JSON.parse(localStorage.getItem('priceCompare'));
+    for(let item of savedQuery) {
+        listDiv.insertAdjacentHTML('beforeend', `
+            <div class='list'>
+                <a href='javascript:void(0)'>${item}</a>
+                <button class='delBtn'>X</button>
+            </div>
+            `
+        );
+    }
+}
+
+function addEventToLists() {
+    //검색 목록 클릭 이벤트
+    let listElemArr = Array.from(document.querySelectorAll('.list > a'));
+    for(let listElem of listElemArr) {
+        listElem.addEventListener('click', event => {
+            document.querySelector('input').value = event.target.textContent;
+        });
+    }
+    //검색 목록 삭제 이벤트
+    let xElemArr = Array.from(document.querySelectorAll('.delBtn'));
+    for(let xElem of xElemArr) {
+        xElem.addEventListener('click', event => {
+            let index = savedQuery.findIndex(item => item === event.target.previousElementSibling.textContent);
+            savedQuery.splice(index, 1);
+            localStorage.setItem('priceCompare', JSON.stringify(savedQuery));
+            listDiv.innerHTML = '';
+            loadSavedLists();
+            addEventToLists();
+        });
+    }
+}
