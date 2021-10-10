@@ -26,6 +26,12 @@ section.control
       | 하루 목표치: 
       input#goalPage(type='number' name='goalpage')
       br
+      | 분할하는 경우, 파트 갯수: 
+      input#partNum(type='number' name='partNum')
+      | 개
+      button#partBtn 적용
+      br
+      #partition
       input#fromToday(type='radio' name='basis' value='fromToday' checked='')
       label(for='fromToday') 오늘부터
       input#fromSpecDate(type='radio' name='basis' value='fromSpecDate')
@@ -47,6 +53,7 @@ section.display
       tr
         th 날짜
         th 목표
+        th
         th 실행
         th
           button#updateBtn 갱신

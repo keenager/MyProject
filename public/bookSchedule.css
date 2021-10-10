@@ -38,7 +38,7 @@ th {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
 }
-td:nth-child(n+1):nth-child(-n+2) {
+td:nth-child(n+1):nth-child(-n+3) {
     border-right: 1px dashed black;
 }
 td {
