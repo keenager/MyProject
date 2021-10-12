@@ -104,16 +104,16 @@ initBtn.onclick = () => {
 let listElemArr = Array.from(document.querySelectorAll('li > a'));
 for(let listElem of listElemArr) {
     listElem.addEventListener('click', event => {
-        scdData = curSavedData[event.target.textContent];
+        Object.assign(scdData, curSavedData[event.target.textContent]);
         displayScd(scdData);
     });
 }
 
 updateBtn.onclick = () => {
     if(scdData.config.partNum < 2) {
-        scdData.data = updateScd(scdData.data , 1, +totalPage.value, +goalPage.value).slice();
+        scdData.data = updateScd(scdData.data, 1, +totalPage.value, +goalPage.value).slice();
     } else {
-        scdData.data = updateScd2(+goalPage.value, scdData.config.partArr).slice();
+        scdData.data = updateScd2(scdData.data, +goalPage.value, scdData.config.partArr).slice();
     }
     displayScd(scdData);
 }
@@ -280,11 +280,15 @@ function updateScd(scd, start, totalPage, oneDayGoal, inputElems = Array.from(do
     return tempData
 }
 
-function updateScd2(oneDayGoal, arr, inputElems = Array.from(document.querySelectorAll('tbody tr input'))) {
-    let tempData = [];
+// 각 파트를 점선 등으로 구별하면 좋을 듯.
+// 진도가 밀려서 자투리나 다음 파트에서 이전 파트 부분 한 경우 -> 파트별 완성 여부 체크하는 변수 설정.
+function updateScd2(scd, oneDayGoal, arr) {
+    let tempData = scd.slice();
     let idx = 0;  //계획표 tr의 인덱스
     let dateCount = 0;
     let jaturi = 0;
+    const inputElems = Array.from(document.querySelectorAll('tbody tr input'));
+    let fulfilledPage;
 
     for(let i = 0; i < arr.length; i++) {
         let ymdStr, goalStr;
@@ -295,27 +299,49 @@ function updateScd2(oneDayGoal, arr, inputElems = Array.from(document.querySelec
         let endPage = +arr[i].end;
 
         while(startPage <= endPage) {
+            if(idx < scd.length && tempData[idx][2]) {
+                startPage = +tempData[idx][2].split('~')[1] + 1;
+                idx++;
+                dateCount++;
+                continue
+            }
+
             let result = startPage + oneDayGoal - 1;
             let goalPage;
-            if(result <= endPage) {
+            if(result < endPage) {
                 goalPage = result;
                 jaturi = 0;
-            } else {
+            } else {  //마지막 페이지에 도달한 경우
                 goalPage = endPage;
                 jaturi = result - endPage;
             }
-            let startDate = new Date(scdData.data[0][0]);
+            //날짜 설정
+            let startDate = new Date(tempData[0][0]);
             startDate.setDate(startDate.getDate() + dateCount);
             ymdStr = startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate();
+            //목표 설정
             goalStr = startPage + '~' + goalPage;
-            tempData[idx] = [ymdStr, goalStr];  //저장
-            let fulfilledPage = +inputElems[idx].value;
+            //저장(인풋 없는 경우)
+            tempData[idx] = [ymdStr, goalStr];
+            //저장(인풋 있는 경우)
+            if(idx < scd.length) {
+                fulfilledPage = +inputElems[idx].value;
+            }
             if(fulfilledPage) {
-                tempData[idx][2] = startPage + '~' + fulfilledPage;  //저장
+                //입력칸 앞에 진도가 안나간 날이 있는 경우, 직전칸 startPage가 아니라, 마지막 진도 나간 날의 다음 날의 startPage를 구함.
+                let fulfilledFilter = tempData.filter(item => item[2]);
+                let indexOfLastFulfilled = tempData.indexOf(fulfilledFilter[fulfilledFilter.length - 1])
+                let startData = tempData[indexOfLastFulfilled + 1];
+                startPage = +startData[1].split('~')[0];
+                tempData[idx][2] = startPage + '~' + fulfilledPage; 
                 goalPage = fulfilledPage;   
             }
-            idx++;
+            if(goalPage === endPage && i === arr.length - 1) {  //마지막 파트, 마지막 페이지
+                tempData.splice(idx + 1);
+                return tempData
+            }
             startPage = goalPage + 1;
+            idx++;
             dateCount++;
         }
         if(jaturi && i < arr.length - 1) {     // 자투리가 있고, 마지막 파티션이 아닐 경우
