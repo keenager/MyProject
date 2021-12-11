@@ -20,7 +20,8 @@ let scdData = { data: [],
                     goalPage: '',
                     specDate: '',
                     partNum: 0,
-                    partArr: [] 
+                    partArr: [],
+                    partLastIdx: [],
                 }
             };
 
@@ -198,12 +199,13 @@ function setScd2(oneDayGoal, arr) {
         while(startPage <= endPage) {
             let result = startPage + oneDayGoal - 1;
             let goalPage;
-            if(result <= endPage) {
+            if(result < endPage) {
                 goalPage = result;
                 jaturi = 0;
             } else {
                 goalPage = endPage;
                 jaturi = result - endPage;
+                scdData.config.partLastIdx[i] = idx;
             }
             ymdStr = getYMD(dateCount).getFullYear() + '-' + (getYMD(dateCount).getMonth() + 1) + '-' + getYMD(dateCount).getDate();
             goalStr = startPage + '~' + goalPage;
@@ -299,8 +301,13 @@ function updateScd2(scd, oneDayGoal, arr) {
         let endPage = +arr[i].end;
 
         while(startPage <= endPage) {
-            if(idx < scd.length && tempData[idx][2]) {
-                startPage = +tempData[idx][2].split('~')[1] + 1;
+            if(idx < scd.length && tempData[idx][2]) {  //실제 실행 페이지가 반영되어 있는 경우
+                let savedFulfilledPage = +tempData[idx][2].split('~')[1];
+                startPage = savedFulfilledPage + 1;
+                if(savedFulfilledPage < +arr[i].start || savedFulfilledPage > +arr[i].end) {
+                    endPage = +arr[i - 1].end;
+                    i = i - 1;
+                }
                 idx++;
                 dateCount++;
                 continue
@@ -314,6 +321,7 @@ function updateScd2(scd, oneDayGoal, arr) {
             } else {  //마지막 페이지에 도달한 경우
                 goalPage = endPage;
                 jaturi = result - endPage;
+                tempData.config.partLastIdx.concat(idx);
             }
             //날짜 설정
             let startDate = new Date(tempData[0][0]);
@@ -327,16 +335,21 @@ function updateScd2(scd, oneDayGoal, arr) {
             if(idx < scd.length) {
                 fulfilledPage = +inputElems[idx].value;
             }
-            if(fulfilledPage) {
+            if(fulfilledPage) {  
                 //입력칸 앞에 진도가 안나간 날이 있는 경우, 직전칸 startPage가 아니라, 마지막 진도 나간 날의 다음 날의 startPage를 구함.
                 let fulfilledFilter = tempData.filter(item => item[2]);
                 let indexOfLastFulfilled = tempData.indexOf(fulfilledFilter[fulfilledFilter.length - 1])
                 let startData = tempData[indexOfLastFulfilled + 1];
                 startPage = +startData[1].split('~')[0];
                 tempData[idx][2] = startPage + '~' + fulfilledPage; 
-                goalPage = fulfilledPage;   
+                goalPage = fulfilledPage;
+                //입력한 페이지가 해당칸이 속한 파트가 아니라 이전 파트에 해당하는 경우에 관한 처리
+                if(fulfilledPage < +arr[i].start || fulfilledPage > +arr[i].end) {
+                    endPage = +arr[i - 1].end;
+                    i = i - 1;
+                }
             }
-            if(goalPage === endPage && i === arr.length - 1) {  //마지막 파트, 마지막 페이지
+            if(i === arr.length - 1 && goalPage === endPage) {  //마지막 파트, 마지막 페이지
                 tempData.splice(idx + 1);
                 return tempData
             }
@@ -408,11 +421,14 @@ function displayScd(scdData) {
     
     let tbody = document.querySelector('tbody');
     tbody.innerHTML = '';
-    for(let item of scdData.data) {
+    scdData.data.forEach( (item, index) => {
         let newRow = tbody.insertRow(-1);
         newRow.insertCell(0).innerHTML = item[0];
         newRow.insertCell(1).innerHTML = item[1];        
         newRow.insertCell(2).innerHTML = "<input type='number'>";
         newRow.insertCell(3).innerHTML = item[2] || '';
-    }
+        if(scdData.config.partLastIdx.includes(index)) {
+            newRow.classList.add('last_page');
+        } 
+    });
 }

@@ -38,6 +38,9 @@ th {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
 }
+tr.last_page {
+    border-bottom: 1px dashed black;
+}
 td:nth-child(n+1):nth-child(-n+3) {
     border-right: 1px dashed black;
 }
