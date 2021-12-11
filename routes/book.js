@@ -8,6 +8,7 @@ router.get('/', (req, res) => {
     res.render('bookSchedule', {
         is_logined: req.session.is_logined,
         nickname: req.session.nickname,
+        title: 'Book Schedule',
     });
 })
 

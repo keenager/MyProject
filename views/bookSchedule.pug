@@ -5,18 +5,9 @@ head
   link(rel='stylesheet' href='bookSchedule.css')
   script(defer src='bookSchedule.js')
 
-section.header
-  span #{nickname}
-  if is_logined
-      |  | 
-      a(href='/auth/logout') 로그아웃
-  else 
-      a(href='/auth/login') 로그인
-  br
-
 include sideNavi.pug
 
-section.control
+section.control(style='position: relative; top: 56px')
   #inputDiv
     fieldset
       legend 계산하기
@@ -46,7 +37,7 @@ section.control
       legend 불러오기
       #savedList 저장된 스케줄
         ul 
-section.display
+section.display(style='position: relative; top: 56px')
   table#table
     caption
     thead
@@ -60,3 +51,5 @@ section.display
     tbody
   button#saveBtn 저장하기
   button#delBtn 삭제하기
+
+include bootstrapJS.pug   

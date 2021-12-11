@@ -5,16 +5,9 @@ head
   link(rel='stylesheet' href='calendar.css')
   script(defer src='calendar.js')
 
-span #{nickname}
-if is_logined
-    |  | 
-    a(href='/auth/logout') 로그아웃
-else 
-    a(href='/auth/login') 로그인
-
 include sideNavi.pug
 
-table
+table(style='position: relative; top: 56px')
   colgroup
     col(span='7' style='width: 14%;')
     //- col(span='2' style='width: 5%;')
@@ -41,3 +34,5 @@ table
     tr#w4
     tr#w5
     tr#w6
+
+include bootstrapJS.pug

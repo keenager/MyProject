@@ -5,17 +5,9 @@ head
   script(defer src='https://cdn.jsdelivr.net/npm/chart.js')
   script(defer src='diet.js')
 
-span #{nickname}
-if is_logined
-    |  | 
-    a(href='/auth/logout') 로그아웃
-else 
-    a(href='/auth/login') 로그인
-br
-
 include sideNavi.pug
 
-ul
+ul(style='position: relative; top: 56px')
   li 
     | 최근 1주(
     span#week 
@@ -28,3 +20,5 @@ ul
     | ) 보기
   div
     canvas#monthlyChart
+
+include bootstrapJS.pug   

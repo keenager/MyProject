@@ -13,6 +13,7 @@ router.get('/', (req, res) => {
         nickname: req.session.nickname,
         year: date.getFullYear(),
         month: date.getMonth() + 1,
+        title: 'Calendar',
     });
 });
 

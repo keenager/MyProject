@@ -1,11 +1,11 @@
 doctype html
 head
   include headTemplate.pug
-  title Scrap
+  title #{title}
 
 include sideNavi.pug
 
-section.article_container 
+section.article_container(style='position: relative; top: 56px')
   article#hani_editorial 
   article#hani_most 
   article#khan_opinion 
@@ -26,4 +26,5 @@ script(type='text/javascript').
   //- fetch('/scrap/getArticles/hani_editorial')
   //-   .then(res => res.text())
   //-   .then(data => document.querySelector('#hani_editorial').innerHTML = data);
-  
+
+include bootstrapJS.pug   

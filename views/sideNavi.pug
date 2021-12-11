@@ -1,10 +1,47 @@
-span.menubtn &#9776; menu
-#mySidenav.sidenav
-  a.closebtn(href='javascript:void(0)') &times;
-  a(href='/') Home 
-  a(href='/calendar') Calendar
-  //- a(href='/case') Case Search
-  a(href='/diet') Diet Management
-  a(href='/book') Book Schedule  
-  //- a(href='/priceCompare') Price Compare
-  a(href='/scrap') Scrap
+- 
+  const list = {
+    '/': 'Home',
+    '/calendar': 'Calendar',
+    '/diet': 'Diet Manager',
+    '/book': 'Book Schedule',
+    '/scrap': 'Newspaper Scrap'
+  }
+nav.navbar.navbar-light.bg-light.fixed-top
+  .container-fluid
+    a.navbar-brand(href='javascript:location.reload()') #{title}
+    button.navbar-toggler(type='button' data-bs-toggle='offcanvas' data-bs-target='#offcanvasNavbar' aria-controls='offcanvasNavbar')
+      span.navbar-toggler-icon
+    #offcanvasNavbar.offcanvas.offcanvas-end(tabindex='-1' aria-labelledby='offcanvasNavbarLabel')
+      .offcanvas-header
+        h5#offcanvasNavbarLabel.offcanvas-title Menu
+        span #{nickname}
+          if is_logined
+              |  | 
+              a(href='/auth/logout') 로그아웃
+          else 
+              a(href='/auth/login') 로그인
+        button.btn-close.text-reset(type='button' data-bs-dismiss='offcanvas' aria-label='Close')
+      .offcanvas-body
+        ul.navbar-nav.justify-content-end.flex-grow-1.pe-3
+          each item, key in list 
+            li.nav-item 
+              if item == title
+                a.nav-link.active(aria-current='page' href=key)= item
+              else
+                a.nav-link(href=key)= item
+
+        //-   li.nav-item.dropdown
+        //-     a#offcanvasNavbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
+        //-       | Dropdown
+        //-     ul.dropdown-menu(aria-labelledby='offcanvasNavbarDropdown')
+        //-       li
+        //-         a.dropdown-item(href='#') Action
+        //-       li
+        //-         a.dropdown-item(href='#') Another action
+        //-       li
+        //-         hr.dropdown-divider
+        //-       li
+        //-         a.dropdown-item(href='#') Something else here
+        //- form.d-flex
+        //-   input.form-control.me-2(type='search' placeholder='Search' aria-label='Search')
+        //-   button.btn.btn-outline-success(type='submit') Search

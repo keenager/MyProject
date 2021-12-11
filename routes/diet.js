@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
     }).render('diet', {
         is_logined: req.session.is_logined,
         nickname: req.session.nickname,
+        title: 'Diet Manager',
     });
 });
 

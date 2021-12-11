@@ -7,7 +7,11 @@ router.get('/', (req, res) => {
     //     res.redirect('/');
     // }
 
-    res.render('scrap');
+    res.render('scrap', {
+        is_logined: req.session.is_logined,
+        nickname: req.session.nickname,
+        title: 'Newspaper Scrap',
+    });
 });
 
 router.get('/getArticles/:nameTopic', (req, res) => {
