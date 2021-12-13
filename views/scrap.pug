@@ -14,12 +14,12 @@ section.article_container(style='position: relative; top: 56px')
   article#sisain2 
 
 script(type='text/javascript').
-  let nameTopics = Array.from(document.querySelectorAll('article')).map(item => item.id);
-  let requests = nameTopics.map(nameTopic => fetch('/scrap/getArticles/' + nameTopic));
+  let topicNames = Array.from(document.querySelectorAll('article')).map(item => item.id);
+  let requests = topicNames.map(topicName => fetch('/scrap/getArticles/' + topicName));
   Promise.all(requests)
     .then(responses => Promise.all(responses.map(r => r.text())))
     .then(lists => lists.forEach( (item, index) => {
-      document.getElementById(nameTopics[index]).innerHTML = item;
+      document.getElementById(topicNames[index]).innerHTML = item;
     }));
 
 

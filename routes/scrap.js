@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/getArticles/:nameTopic', (req, res) => {
+router.get('/getArticles/:topicName', (req, res) => {
     scrapmod.getArticles(req, res);
 });
 
