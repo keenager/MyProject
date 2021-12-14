@@ -28,6 +28,7 @@ router.get('/:yearMonth', (req, res) => {
         nickname: req.session.nickname,
         year: arr[0],
         month: +arr[1],
+        title: 'Calendar',
     });
 });
 

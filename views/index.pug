@@ -1,24 +1,31 @@
 doctype html
 head
-    meta(charset="UTF-8")
-    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    include headTemplate.pug
     title Homepage
+    style(type='text/css').
+        .list-group {
+            align-items: center;
+            height: 90vh;
+            justify-content: center;
+        }
+        .list-group-item {
+            width: 50%;
+            text-align: center;
+        }
+
 span #{nickname}
 if is_logined
     |  | 
-    a(href='/auth/logout') 로그아웃
+    a.btn.btn-outline-primary(href='/auth/logout') 로그아웃
 else 
-    a(href='/auth/login') 로그인
-ul
-    li
-        a(href="/calendar") Calendar
-    //- li
-    //-     a(href="/case") Case Search
-    li
-        a(href="/diet") Diet Management
-    li
-        a(href="/book") Book Schedule
-    //- li
-    //-     a(href="/priceCompare") Price Compare
-    li
-        a(href="/scrap") Scrap
+    a.btn.btn-outline-primary(href='/auth/login') 로그인
+
+.list-group
+    a.list-group-item.list-group-item-action(href="/calendar") Calendar
+    //- a(href="/case") Case Search
+    a.list-group-item.list-group-item-action(href="/diet") Diet Management
+    a.list-group-item.list-group-item-action(href="/book") Book Schedule
+    //- a(href="/priceCompare") Price Compare
+    a.list-group-item.list-group-item-action(href="/scrap") Scrap
+
+include bootstrapJS.pug

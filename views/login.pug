@@ -1,12 +1,22 @@
 doctype html
 head 
-    meta(charset="UTF-8")
-    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    include headTemplate.pug
     title 로그인
+    style(type='text/css').
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            justify-content: center;
+        }
+        .form-control {
+            width: fit-content;
+        }
+
 form(action="/auth/login_process", method="post") 
-    p
-        input(type="text", name="id", placeholder='ID')
-    p 
-        input(type="password", name="password", placeholder='password')
-    p 
-        input(type="submit", value="login")
+    input.form-control(type="text", name="id", placeholder='ID')
+    input.form-control(type="password", name="password", placeholder='Password')
+    button.btn.btn-primary(type="submit") Login
+
+include bootstrapJS.pug

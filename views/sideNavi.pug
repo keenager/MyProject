@@ -17,9 +17,9 @@ nav.navbar.navbar-light.bg-light.fixed-top
         span #{nickname}
           if is_logined
               |  | 
-              a(href='/auth/logout') 로그아웃
+              a.btn.btn-outline-primary(href='/auth/logout') 로그아웃
           else 
-              a(href='/auth/login') 로그인
+              a.btn.btn-outline-primary(href='/auth/login') 로그인
         button.btn-close.text-reset(type='button' data-bs-dismiss='offcanvas' aria-label='Close')
       .offcanvas-body
         ul.navbar-nav.justify-content-end.flex-grow-1.pe-3
