@@ -38,6 +38,7 @@ router.get('/schedule/:dateId', (req, res) => {
     }
     res.render('schedule', {
         dateId: req.params.dateId,
+        title: 'Calendar',
     });
 });
 

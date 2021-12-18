@@ -1,4 +1,4 @@
-let curSavedData = new Object();  //로컬스토리지에 저장된 전체 데이터를 담을 공간
+let savedAllData = new Object();  //로컬스토리지에 저장된 전체 데이터를 담을 공간
 /* 
 { title1: { data: [
                       [ ymd, goal, fulfilled ],
@@ -31,8 +31,8 @@ let lists = [];
 if( localStorage.getItem('bookSchedule') === '{}' || localStorage.getItem('bookSchedule') === null ) {
     listDiv.parentElement.innerHTML = '저장된 자료가 없습니다.';
 } else {
-    curSavedData = JSON.parse(localStorage.getItem('bookSchedule'));
-    lists = Object.keys(curSavedData);
+    savedAllData = JSON.parse(localStorage.getItem('bookSchedule'));
+    lists = Object.keys(savedAllData);
     for(let list of lists) {
         listDiv.insertAdjacentHTML('beforeend', `
             <li><a href='javascript:void(0)'>${list}</a></li>
@@ -105,7 +105,7 @@ initBtn.onclick = () => {
 let listElemArr = Array.from(document.querySelectorAll('li > a'));
 for(let listElem of listElemArr) {
     listElem.addEventListener('click', event => {
-        Object.assign(scdData, curSavedData[event.target.textContent]);
+        scdData = JSON.parse(JSON.stringify(savedAllData[event.target.textContent]));  // Deep Copy
         displayScd(scdData);
     });
 }
@@ -128,8 +128,8 @@ saveBtn.onclick = () => {
     }
     scdData.config.type = 'saved';
     scdData.config.title = title;
-    curSavedData[title] = scdData;
-    localStorage.setItem('bookSchedule', JSON.stringify(curSavedData));
+    savedAllData[title] = scdData;
+    localStorage.setItem('bookSchedule', JSON.stringify(savedAllData));
     location.reload();
 }
 
@@ -137,8 +137,8 @@ delBtn.onclick = () => {
     if(scdData.config.type === 'new') {
         return
     }
-    delete curSavedData[scdData.config.title];
-    localStorage.setItem('bookSchedule', JSON.stringify(curSavedData));
+    delete savedAllData[scdData.config.title];
+    localStorage.setItem('bookSchedule', JSON.stringify(savedAllData));
     location.reload();
 }
 
@@ -223,8 +223,8 @@ function setScd2(oneDayGoal, arr) {
     }
 }
 
-function updateScd(scd, start, totalPage, oneDayGoal, inputElems = Array.from(document.querySelectorAll('tbody tr input'))) {       //updateScd2를 따로 만들지, partArr를 추가인자로 받아서 하나로 할 지...
-    let tempData = scd.slice();  //tempData로 복사
+function updateScd(data, start, totalPage, oneDayGoal, inputElems = Array.from(document.querySelectorAll('tbody tr input'))) {       //updateScd2를 따로 만들지, partArr를 추가인자로 받아서 하나로 할 지...
+    let tempData = JSON.parse(JSON.stringify(data));  //tempData로 복사
     let startPage = start;
     let i = 0;
     let jaturi = 0;
@@ -232,9 +232,11 @@ function updateScd(scd, start, totalPage, oneDayGoal, inputElems = Array.from(do
 
     while(startPage <= totalPage) { 
         let fulfilledPage = +inputElems[i].value;
+        // 입력한 값이 있을 때
         if(fulfilledPage) {  
-            // 입력한 값이 있을 때
-            startPage = +tempData[i][1].split('~')[0];
+            //입력칸 앞에 진도가 안나간 날이 있는 경우, 직전칸 startPage가 아니라, 마지막 진도 나간 날의 다음 날의 startPage를 구함.
+            startPage = getNextPageOfLastFulfilled(tempData);
+            
             if(fulfilledPage < totalPage) {
                 tempData[i][2] = startPage + '~' + fulfilledPage;  // 실행 내역 저장
                 startPage = fulfilledPage + 1;
@@ -272,7 +274,7 @@ function updateScd(scd, start, totalPage, oneDayGoal, inputElems = Array.from(do
         let count = Math.ceil(jaturi / oneDayGoal);
         for(let j = 1; j <= count; j++) {
             lastDate.setDate(lastDate.getDate() + j);
-            let ymdStr = lastDate.getFullYear() + '-' + (lastDate.getMonth() + 1) + '-' + lastDate.getDate();
+            let ymdStr = getYMDstr(lastDate);
             let result = startPage + oneDayGoal - 1;
             result = result < totalPage ? result : totalPage;
             let goalStr = startPage + '~' + result;
@@ -284,8 +286,8 @@ function updateScd(scd, start, totalPage, oneDayGoal, inputElems = Array.from(do
 
 // 각 파트를 점선 등으로 구별하면 좋을 듯.
 // 진도가 밀려서 자투리나 다음 파트에서 이전 파트 부분 한 경우 -> 파트별 완성 여부 체크하는 변수 설정.
-function updateScd2(scd, oneDayGoal, arr) {
-    let tempData = scd.slice();
+function updateScd2(data, oneDayGoal, arr) {
+    let tempData = JSON.parse(JSON.stringify(data));
     let idx = 0;  //계획표 tr의 인덱스
     let dateCount = 0;
     let jaturi = 0;
@@ -301,7 +303,7 @@ function updateScd2(scd, oneDayGoal, arr) {
         let endPage = +arr[i].end;
 
         while(startPage <= endPage) {
-            if(idx < scd.length && tempData[idx][2]) {  //실제 실행 페이지가 반영되어 있는 경우
+            if(idx < data.length && tempData[idx][2]) {  //실제 실행 페이지가 반영되어 있는 경우
                 let savedFulfilledPage = +tempData[idx][2].split('~')[1];
                 startPage = savedFulfilledPage + 1;
                 if(savedFulfilledPage < +arr[i].start || savedFulfilledPage > +arr[i].end) {
@@ -321,27 +323,26 @@ function updateScd2(scd, oneDayGoal, arr) {
             } else {  //마지막 페이지에 도달한 경우
                 goalPage = endPage;
                 jaturi = result - endPage;
-                tempData.config.partLastIdx.concat(idx);
+                scdData.config.partLastIdx[i] = idx;
             }
             //날짜 설정
             let startDate = new Date(tempData[0][0]);
             startDate.setDate(startDate.getDate() + dateCount);
-            ymdStr = startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate();
+            ymdStr = getYMDstr(startDate);
             //목표 설정
             goalStr = startPage + '~' + goalPage;
             //저장(인풋 없는 경우)
             tempData[idx] = [ymdStr, goalStr];
             //저장(인풋 있는 경우)
-            if(idx < scd.length) {
+            if(idx < data.length) {
                 fulfilledPage = +inputElems[idx].value;
             }
             if(fulfilledPage) {  
-                //입력칸 앞에 진도가 안나간 날이 있는 경우, 직전칸 startPage가 아니라, 마지막 진도 나간 날의 다음 날의 startPage를 구함.
-                let fulfilledFilter = tempData.filter(item => item[2]);
-                let indexOfLastFulfilled = tempData.indexOf(fulfilledFilter[fulfilledFilter.length - 1])
-                let startData = tempData[indexOfLastFulfilled + 1];
-                startPage = +startData[1].split('~')[0];
-                tempData[idx][2] = startPage + '~' + fulfilledPage; 
+                startPage = getNextPageOfLastFulfilled(tempData);
+                tempData[idx][2] = startPage + '~' + fulfilledPage;
+                if(fulfilledPage == endPage) {
+                    scdData.config.partLastIdx[i] = idx;
+                }
                 goalPage = fulfilledPage;
                 //입력한 페이지가 해당칸이 속한 파트가 아니라 이전 파트에 해당하는 경우에 관한 처리
                 if(fulfilledPage < +arr[i].start || fulfilledPage > +arr[i].end) {
@@ -392,6 +393,17 @@ function updateScd3(oneDayGoal, arr) {
     }
 
     return newScd
+}
+
+function getYMDstr(date) {
+    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+}
+
+function getNextPageOfLastFulfilled(data) {
+    let fulfilledFilter = data.filter(item => item[2]);
+    let indexOfLastFulfilled = data.indexOf(fulfilledFilter[fulfilledFilter.length - 1])
+    let startData = data[indexOfLastFulfilled + 1];
+    return +startData[1].split('~')[0]
 }
 
 function displayScd(scdData) {
