@@ -18,4 +18,12 @@ router.get('/getArticles/:topicName', (req, res) => {
     scrapmod.getArticles(req, res);
 });
 
+router.get('/getNewsNames', (req, res) => {
+    scrapmod.getNewsNames(req, res);
+});
+
+router.get('/getData/:topicName', (req, res) => {
+    scrapmod.getData(req, res);
+});
+
 module.exports = router;
